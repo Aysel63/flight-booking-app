@@ -5,25 +5,23 @@ import java.util.Objects;
 
 public class BookingEntity implements Serializable {
 
-    private String bookingId;
+    private int bookingId;
     private FlightEntity flight;
     private String firstName;
     private String lastName;
-    private BookingStatus status;
 
-    public BookingEntity(String bookingId, FlightEntity flight, String firstName, String lastName, BookingStatus status) {
+    public BookingEntity(int bookingId, FlightEntity flight, String firstName, String lastName) {
         this.bookingId = bookingId;
         this.flight = flight;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.status = status;
     }
 
-    public String getBookingId() {
+    public int getBookingId() {
         return bookingId;
     }
 
-    public void setBookingId(String bookingId) {
+    public void setBookingId(int bookingId) {
         this.bookingId = bookingId;
     }
 
@@ -51,13 +49,6 @@ public class BookingEntity implements Serializable {
         this.lastName = lastName;
     }
 
-    public BookingStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(BookingStatus status) {
-        this.status = status;
-    }
 
     @Override
     public String toString() {
@@ -66,7 +57,6 @@ public class BookingEntity implements Serializable {
                 ", flight=" + flight +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", status=" + status +
                 '}';
     }
 
@@ -78,12 +68,11 @@ public class BookingEntity implements Serializable {
         return Objects.equals(bookingId, booking.bookingId) &&
                 Objects.equals(flight, booking.flight) &&
                 Objects.equals(firstName, booking.firstName) &&
-                Objects.equals(lastName, booking.lastName) &&
-                status == booking.status;
+                Objects.equals(lastName, booking.lastName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bookingId, flight, firstName, lastName, status);
+        return Objects.hash(bookingId, flight, firstName, lastName);
     }
 }

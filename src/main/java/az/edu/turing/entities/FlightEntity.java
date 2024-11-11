@@ -6,13 +6,13 @@ import java.util.Objects;
 
 public class FlightEntity implements Serializable {
 
-    private String flightId;
+    private int flightId;
     private String destination;
     private String from = "Kiev";
     private LocalDateTime departureTime;
     private int availableSeats;
 
-    public FlightEntity(String flightId, String destination, String from, LocalDateTime departureTime, int availableSeats) {
+    public FlightEntity(int flightId, String destination, String from, LocalDateTime departureTime, int availableSeats) {
         this.flightId = flightId;
         this.destination = destination;
         this.from = from;
@@ -21,11 +21,11 @@ public class FlightEntity implements Serializable {
     }
 
 
-    public String getFlightId() {
+    public int getFlightId() {
         return flightId;
     }
 
-    public void setFlightId(String flightId) {
+    public void setFlightId(int flightId) {
         this.flightId = flightId;
     }
 
