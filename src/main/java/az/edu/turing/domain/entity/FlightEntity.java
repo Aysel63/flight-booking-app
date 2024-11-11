@@ -1,4 +1,4 @@
-package az.edu.turing.entities;
+package az.edu.turing.domain.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -31,12 +31,7 @@ public class FlightEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "Flight{" +
-                "flightId='" + flightId + '\'' +
-                ", destination='" + destination + '\'' +
-                ", departureTime=" + departureTime +
-                ", availableSeats=" + availableSeats +
-                '}';
+        return "{flightId='%s', destination='%s', departureTime=%s, availableSeats=%d}".formatted(flightId, destination, departureTime, availableSeats);
     }
 
     @Override
