@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class BookingEntity implements Serializable {
 
-    private int bookingId;
+    private long bookingId;
     private FlightEntity flight;
     private String firstName;
     private String lastName;
@@ -17,7 +17,7 @@ public class BookingEntity implements Serializable {
         this.lastName = lastName;
     }
 
-    public int getBookingId() {
+    public long getBookingId() {
         return bookingId;
     }
 

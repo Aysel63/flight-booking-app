@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class FlightEntity implements Serializable {
 
-    private int flightId;
+    private long flightId;
     private String destination;
     private String from = "Kiev";
     private LocalDateTime departureTime;
@@ -21,7 +21,7 @@ public class FlightEntity implements Serializable {
     }
 
 
-    public int getFlightId() {
+    public long getFlightId() {
         return flightId;
     }
 
