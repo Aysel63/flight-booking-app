@@ -4,36 +4,30 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public class BookingDto implements Serializable {
-    private long bookingId;
-    private long flightId;
-    private String firstName;
-    private String lastName;
+    private final long bookingId;
+    private final long flightId;
+    private final String firstName;
+    private final String lastName;
+    private final String from;
+    private final String destination;
+    private final LocalDateTime departureTime;
 
-    // Constructor, getters, setters
-    public BookingDto(long flightId, String firstName, String lastName) {
+    public BookingDto(long bookingId, long flightId, String firstName, String lastName, String from, String destination, LocalDateTime departureTime) {
+        this.bookingId = bookingId;
         this.flightId = flightId;
         this.firstName = firstName;
         this.lastName = lastName;
-    }
-
-    public BookingDto(long bookingId, long flightId, String firstName, String lastName, String from, String destination, LocalDateTime departureTime) {
-
+        this.from = from;
+        this.destination = destination;
+        this.departureTime = departureTime;
     }
 
     public long getBookingId() {
         return bookingId;
     }
 
-    public void setBookingId(long bookingId) {
-        this.bookingId = bookingId;
-    }
-
     public long getFlightId() {
         return flightId;
-    }
-
-    public void setFlightId(long flightId) {
-        this.flightId = flightId;
     }
 
     public String getFullName() {
@@ -44,15 +38,19 @@ public class BookingDto implements Serializable {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
     public String getLastName() {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public String getFrom() {
+        return from;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public LocalDateTime getDepartureTime() {
+        return departureTime;
     }
 }

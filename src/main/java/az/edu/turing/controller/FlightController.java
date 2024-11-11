@@ -2,12 +2,16 @@ package az.edu.turing.controller;
 
 import az.edu.turing.model.dto.FlightDto;
 import az.edu.turing.service.FlightService;
-import az.edu.turing.service.impl.FlightServiceImpl;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class FlightController {
-    private FlightService flightService = new FlightServiceImpl();
+    private final FlightService flightService;
+
+    public FlightController(FlightService flightService) {
+        this.flightService = flightService;
+    }
 
     public FlightDto getFlightById(long flightId) {
         return flightService.getFlightById(flightId);
@@ -17,7 +21,7 @@ public class FlightController {
         return flightService.getAllFlights();
     }
 
-    public List<FlightDto> findFlights(String destination) {
-        return flightService.findFlights(destination);
+    public List<FlightDto> findFlights(String destination, LocalDate date, int numberOfPeople) {
+        return flightService.findFlights(destination, date, numberOfPeople);
     }
 }

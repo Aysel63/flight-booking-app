@@ -3,11 +3,14 @@ package az.edu.turing.service;
 import az.edu.turing.model.dto.FlightDto;
 import az.edu.turing.model.dto.request.CreateFlightRequest;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface FlightService {
 
     FlightDto getFlightById(long flightId);
+
     List<FlightDto> getAllFlights();
-    List<FlightDto> findFlights(String destination);
+
+    List<FlightDto> findFlights(String destination, LocalDate date, int numberOfPeople);
 }

@@ -5,68 +5,51 @@ import az.edu.turing.entities.FlightEntity;
 import az.edu.turing.model.dto.FlightDto;
 import az.edu.turing.service.FlightService;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class FlightServiceImpl implements FlightService {
 
-    private FlightDao flightDao;
+    private final FlightDao flightDao;
 
-    public FlightServiceImpl() {
+    public FlightServiceImpl(FlightDao flightDao) {
         this.flightDao = flightDao;
     }
 
-
-
-    @Override
-    public FlightDto getFlightById(long flightId) {
-        Optional<FlightEntity> flightEntity = flightDao.getById(flightId);
-        if (!flightEntity.isPresent()) {
-            return null;
-        }
-
-        FlightEntity flight = flightEntity.get();
+    private FlightDto toDto(FlightEntity flight) {
         return new FlightDto(
                 flight.getFlightId(),
-                flight.getFrom(),
                 flight.getDestination(),
+                flight.getFrom(),
                 flight.getDepartureTime(),
                 flight.getAvailableSeats()
         );
     }
 
     @Override
+    public FlightDto getFlightById(long flightId) {
+        return flightDao.getById(flightId)
+                .map(this::toDto)
+                .orElse(null);
+    }
+
+    @Override
     public List<FlightDto> getAllFlights() {
-        List<FlightEntity> flights = (List<FlightEntity>) flightDao.getAll();
-        return flights.stream()
-                .map(flight -> new FlightDto(
-                        flight.getFlightId(),
-                        flight.getFrom(),
-                        flight.getDestination(),
-                        flight.getDepartureTime(),
-                        flight.getAvailableSeats()
-                ))
+        return flightDao.getAll().stream()
+                .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<FlightDto> findFlights(String destination ) {
-        List<FlightEntity> flights = flightDao.getAll().stream()
-                .filter(f -> f.getDestination().equals(destination) && f.getFrom().equals(f))
-                .collect(Collectors.toList());
-
-        return flights.stream()
-                .map(flight -> new FlightDto(
-                        flight.getFlightId(),
-                        flight.getFrom(),
-                        flight.getDestination(),
-                        flight.getDepartureTime(),
-                        flight.getAvailableSeats()
-                ))
+    public List<FlightDto> findFlights(String destination, LocalDate date, int numberOfPeople) {
+        return flightDao.getAll().stream()
+                .filter(f -> destination == null || f.getDestination().equals(destination))
+                .filter(f -> date == null || f.getDepartureTime().toLocalDate().equals(date))
+                .filter(f -> numberOfPeople <= 0 || f.getAvailableSeats() >= numberOfPeople)
+                .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
-    }
-
+}
 

@@ -3,16 +3,29 @@ package az.edu.turing.entities;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class FlightEntity implements Serializable {
 
-    private long flightId;
+    private static final long serialVersionUID = 1L;
+    private static final AtomicLong atomicCounter = new AtomicLong(0);
+    private final long flightId;
     private String destination;
-    private String from = "Kiev";
+    private String from;
     private LocalDateTime departureTime;
     private int availableSeats;
 
-    public FlightEntity(int flightId, String destination, String from, LocalDateTime departureTime, int availableSeats) {
+
+    public FlightEntity(String destination, String from, LocalDateTime departureTime, int availableSeats) {
+        this.flightId = atomicCounter.incrementAndGet();
+        this.destination = destination;
+        this.from = from;
+        this.departureTime = departureTime;
+        this.availableSeats = availableSeats;
+    }
+
+
+    public FlightEntity(long flightId, String destination, String from, LocalDateTime departureTime, int availableSeats) {
         this.flightId = flightId;
         this.destination = destination;
         this.from = from;
@@ -23,10 +36,6 @@ public class FlightEntity implements Serializable {
 
     public long getFlightId() {
         return flightId;
-    }
-
-    public void setFlightId(int flightId) {
-        this.flightId = flightId;
     }
 
     public String getDestination() {
@@ -63,8 +72,8 @@ public class FlightEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "Flight{" +
-                "flightId='" + flightId + '\'' +
+        return "FlightEntity{" +
+                "flightId=" + flightId +
                 ", destination='" + destination + '\'' +
                 ", from='" + from + '\'' +
                 ", departureTime=" + departureTime +
@@ -76,8 +85,8 @@ public class FlightEntity implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        FlightEntity flight = (FlightEntity) o;
-        return Objects.equals(flightId, flight.flightId);
+        FlightEntity that = (FlightEntity) o;
+        return flightId == that.flightId;
     }
 
     @Override

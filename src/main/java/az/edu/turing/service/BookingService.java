@@ -10,7 +10,7 @@ public interface BookingService {
 
     BookingDto createBooking(long flightId, String firstName, String lastName);
     boolean cancelBooking(long bookingId);
-    List<BookingDto> findBookingByPassenger(String fullName);
+    List<BookingDto> findAllBookingByPassenger(String fullName);
     Optional<BookingDto> getBookingDetails(long bookingId);
     List<BookingDto> getAllBookings();
 }

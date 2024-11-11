@@ -8,7 +8,12 @@ import java.util.List;
 import java.util.Optional;
 
 public class BookingController {
-    private BookingService bookingService = new BookingServiceImpl();
+
+    private final BookingService bookingService;
+
+    public BookingController(BookingService bookingService) {
+        this.bookingService = bookingService;
+    }
 
     public BookingDto createBooking(long flightId, String firstName, String lastName) {
         return bookingService.createBooking(flightId, firstName, lastName);
@@ -19,7 +24,7 @@ public class BookingController {
     }
 
     public List<BookingDto> findBookingByPassenger(String fullName) {
-        return bookingService.findBookingByPassenger(fullName);
+        return bookingService.findAllBookingByPassenger(fullName);
     }
 
     public Optional<BookingDto> getBookingDetails(long bookingId) {
