@@ -1,4 +1,4 @@
-package az.edu.turing.entities;
+package az.edu.turing.domain.entity;
 
 import java.io.Serializable;
 import java.util.List;
@@ -26,11 +26,7 @@ public class BookingEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "Booking{" +
-                "bookingId='" + bookingId + '\'' +
-                ", flight=" + flight +
-                ", passengers=" + passengers +
-                '}';
+        return "{bookingId='%s', flight=%s, passengers=%s}".formatted(bookingId, flight, passengers);
     }
 
     @Override
