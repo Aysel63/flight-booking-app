@@ -1,5 +1,7 @@
 package az.edu.turing.domain.dao;
 
-public abstract class FlightDao implements Dao<FlightEntity, Long{
+import az.edu.turing.entities.FlightEntity;
+
+public abstract class FlightDao implements Dao<FlightEntity, Long> {
 
 }
