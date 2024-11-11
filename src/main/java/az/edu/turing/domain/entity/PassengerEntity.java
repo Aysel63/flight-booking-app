@@ -1,4 +1,4 @@
-package az.edu.turing.entities;
+package az.edu.turing.domain.entity;
 
 import java.io.Serializable;
 import java.util.Objects;
