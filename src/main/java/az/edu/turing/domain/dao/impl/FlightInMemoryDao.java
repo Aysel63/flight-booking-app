@@ -13,7 +13,7 @@ public class FlightInMemoryDao extends FlightDao {
 
     @Override
     public Collection<FlightEntity> getAll() {
-        return FLIGHTS;
+        return List.copyOf(FLIGHTS);
     }
 
     @Override
@@ -26,11 +26,25 @@ public class FlightInMemoryDao extends FlightDao {
     @Override
     public FlightEntity save(FlightEntity object) {
         FLIGHTS.add(object);
-        return object;
+        return FLIGHTS.get(FLIGHTS.size() - 1); //Avoided using .getLast() method for compatibility matters.
     }
 
     @Override
     public boolean deleteById(Long id) {
         return FLIGHTS.removeIf(flights -> flights.getFlightId().equals(id));
+    }
+
+    @Override
+    public FlightEntity updateAvailableSeats(long flightId, int newAvailableSeatCount) {
+        FlightEntity updatedFlight = null;
+        for (FlightEntity flight : FLIGHTS) {
+            if (flight.getFlightId().equals(flightId)) {
+                flight.setAvailableSeats(newAvailableSeatCount);
+                updatedFlight = flight;
+                break;
+            }
+        }
+
+        return updatedFlight;
     }
 }

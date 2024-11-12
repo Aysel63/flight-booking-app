@@ -5,10 +5,11 @@ import az.edu.turing.model.dto.request.CreateFlightRequest;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface FlightService {
 
-    FlightDto getFlightById(long flightId);
+    Optional<FlightDto> getFlightById(long flightId);
 
     List<FlightDto> getAllFlights();
 

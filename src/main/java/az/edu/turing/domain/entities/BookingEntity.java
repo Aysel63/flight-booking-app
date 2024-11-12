@@ -10,24 +10,23 @@ public class BookingEntity implements Serializable {
     private static final AtomicLong atomicCounter = new AtomicLong(0);
 
     private final long bookingId;
-    private FlightEntity flight;
     private String firstName;
     private String lastName;
+    private FlightEntity flight;
 
 
-    public BookingEntity(long bookingId, FlightEntity flight, String firstName, String lastName) {
+    public BookingEntity(long bookingId, String firstName, String lastName, FlightEntity flight) {
         this.bookingId = bookingId;
-        this.flight = flight;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.flight = flight;
     }
 
-
-    public BookingEntity(FlightEntity flight, String firstName, String lastName) {
+    public BookingEntity(String firstName, String lastName, FlightEntity flight) {
         this.bookingId = atomicCounter.incrementAndGet();
-        this.flight = flight;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.flight = flight;
     }
 
     public Long getBookingId() {
@@ -56,6 +55,10 @@ public class BookingEntity implements Serializable {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
     }
 
     @Override
