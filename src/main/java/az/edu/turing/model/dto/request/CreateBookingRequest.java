@@ -3,12 +3,12 @@ package az.edu.turing.model.dto.request;
 public class CreateBookingRequest {
     private long flightId;
     private String bookerName;
-    private String bookerSurName;
+    private String bookerSurname;
 
-    public CreateBookingRequest(long flightId, String bookerName, String bookerSurName) {
+    public CreateBookingRequest(long flightId, String bookerName, String bookerSurname) {
         this.flightId = flightId;
         this.bookerName = bookerName;
-        this.bookerSurName = bookerSurName;
+        this.bookerSurname = bookerSurname;
     }
 
     public long getFlightId() {
@@ -23,11 +23,11 @@ public class CreateBookingRequest {
         this.bookerName=bookerName;
     }
 
-    public String getBookerSurName() {
-        return bookerSurName;
+    public String getBookerSurname() {
+        return bookerSurname;
     }
 
-    public void setBookerSurName(String bookerSurName) {
-        this.bookerSurName = bookerSurName;
+    public void setBookerSurName(String bookerSurname) {
+        this.bookerSurname = bookerSurname;
     }
 }

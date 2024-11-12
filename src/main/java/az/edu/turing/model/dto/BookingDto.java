@@ -8,13 +8,13 @@ public class BookingDto implements Serializable {
 
     private final long bookingId;
     private final String bookerName;
-    private final String bookerSurName;
+    private final String bookerSurname;
     private final FlightEntity flight;
 
-    public BookingDto(long bookingId, String bookerName, String bookerSurName, FlightEntity flight) {
+    public BookingDto(long bookingId, String bookerName, String bookerSurname, FlightEntity flight) {
         this.bookingId = bookingId;
         this.bookerName = bookerName;
-        this.bookerSurName = bookerSurName;
+        this.bookerSurname = bookerSurname;
         this.flight = flight;
     }
 
@@ -27,14 +27,14 @@ public class BookingDto implements Serializable {
     }
 
     public String getFullName() {
-        return bookerName + " " + bookerSurName;
+        return bookerName + " " + bookerSurname;
     }
 
     public String getBookerName() {
         return bookerName;
     }
 
-    public String getBookerSurName() {
-        return bookerSurName;
+    public String getBookerSurname() {
+        return bookerSurname;
     }
 }

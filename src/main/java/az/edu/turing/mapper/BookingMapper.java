@@ -9,7 +9,7 @@ public class BookingMapper implements EntityMapper<BookingEntity, BookingDto>{
         return new BookingEntity(
                 bookingDto.getBookingId(),
                 bookingDto.getBookerName(),
-                bookingDto.getBookerSurName(),
+                bookingDto.getBookerSurname(),
                 bookingDto.getFlight()
         );
     }
@@ -19,7 +19,7 @@ public class BookingMapper implements EntityMapper<BookingEntity, BookingDto>{
         return new BookingDto(
                 bookingEntity.getBookingId(),
                 bookingEntity.getBookerName(),
-                bookingEntity.getBookerSurName(),
+                bookingEntity.getBookerSurname(),
                 bookingEntity.getFlight()
         );
     }

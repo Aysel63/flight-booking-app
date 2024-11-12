@@ -11,21 +11,21 @@ public class BookingEntity implements Serializable {
 
     private final long bookingId;
     private String bookerName;
-    private String bookerSurName;
+    private String bookerSurname;
     private FlightEntity flight;
 
 
-    public BookingEntity(long bookingId, String bookerName, String bookerSurName, FlightEntity flight) {
+    public BookingEntity(long bookingId, String bookerName, String bookerSurname, FlightEntity flight) {
         this.bookingId = bookingId;
         this.bookerName = bookerName;
-        this.bookerSurName = bookerSurName;
+        this.bookerSurname = bookerSurname;
         this.flight = flight;
     }
 
     public BookingEntity(String bookerName, String bookerSurName, FlightEntity flight) {
         this.bookingId = atomicCounter.incrementAndGet();
         this.bookerName = bookerName;
-        this.bookerSurName = bookerSurName;
+        this.bookerSurname = bookerSurname;
         this.flight = flight;
     }
 
@@ -49,16 +49,16 @@ public class BookingEntity implements Serializable {
         this.bookerName = bookerName;
     }
 
-    public String getBookerSurName() {
-        return bookerSurName;
+    public String getBookerSurname() {
+        return bookerSurname;
     }
 
-    public void setBookerSurName(String bookerSurName) {
-        this.bookerSurName = bookerSurName;
+    public void setBookerSurname(String bookerSurname) {
+        this.bookerSurname = bookerSurname;
     }
 
     public String getFullName() {
-        return bookerName + " " + bookerSurName;
+        return bookerName + " " + bookerSurname;
     }
 
     @Override
@@ -67,7 +67,7 @@ public class BookingEntity implements Serializable {
                 "bookingId=" + bookingId +
                 ", flight=" + flight +
                 ", bookerName='" + bookerName + '\'' +
-                ", bookerSurName='" + bookerSurName + '\'' +
+                ", bookerSurname='" + bookerSurname + '\'' +
                 '}';
     }
 
@@ -79,11 +79,11 @@ public class BookingEntity implements Serializable {
         return bookingId == that.bookingId &&
                 Objects.equals(flight, that.flight) &&
                 Objects.equals(bookerName, that.bookerName) &&
-                Objects.equals(bookerSurName, that.bookerSurName);
+                Objects.equals(bookerSurname, that.bookerSurname);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bookingId, flight, bookerName, bookerSurName);
+        return Objects.hash(bookingId, flight, bookerName, bookerSurname);
     }
 }

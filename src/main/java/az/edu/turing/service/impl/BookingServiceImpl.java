@@ -28,14 +28,15 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingDto createBooking(CreateBookingRequest request) {
-        FlightEntity flight = flightDao.getById(request.getFlightId())
-                .orElseThrow(()->new FlightNotFoundException("Flight not found with id: " + request.getFlightId()));
+        long flightId=request.getFlightId();
+        FlightEntity flight = flightDao.getById(flightId)
+                .orElseThrow(()->new FlightNotFoundException("Flight not found with id: " + flightId));
 
         BookingEntity savedBooking = bookingDao.save(
-                new BookingEntity(request.getBookerName(), request.getBookerSurName(), flight)
+                new BookingEntity(request.getBookerName(), request.getBookerSurname(), flight)
         );
 
-        flightDao.updateAvailableSeats(flight.getFlightId(), flight.getAvailableSeats() - 1);
+        flightDao.updateAvailableSeats(flightId, flight.getAvailableSeats() - 1);
 
         return mapper.toDto(savedBooking);
     }

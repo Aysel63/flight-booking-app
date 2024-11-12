@@ -15,7 +15,7 @@ public class FlightController {
     }
 
     public FlightDto getFlightById(long flightId) {
-        return flightService.getFlightById(flightId).orElse(null);
+        return flightService.getFlightById(flightId);
     }
 
     public List<FlightDto> getAllFlights() {
