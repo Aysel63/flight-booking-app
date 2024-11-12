@@ -14,7 +14,7 @@ public class BookingEntity implements Serializable {
     private String firstName;
     private String lastName;
 
-    // BookingId ilə constructor
+
     public BookingEntity(long bookingId, FlightEntity flight, String firstName, String lastName) {
         this.bookingId = bookingId;
         this.flight = flight;
@@ -30,7 +30,7 @@ public class BookingEntity implements Serializable {
         this.lastName = lastName;
     }
 
-    public long getBookingId() {
+    public Long getBookingId() {
         return bookingId;
     }
 

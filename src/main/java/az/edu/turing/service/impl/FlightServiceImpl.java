@@ -2,6 +2,7 @@ package az.edu.turing.service.impl;
 
 import az.edu.turing.domain.dao.FlightDao;
 import az.edu.turing.entities.FlightEntity;
+import az.edu.turing.exception.FlightNotFoundException;
 import az.edu.turing.model.dto.FlightDto;
 import az.edu.turing.service.FlightService;
 
@@ -31,7 +32,7 @@ public class FlightServiceImpl implements FlightService {
     public FlightDto getFlightById(long flightId) {
         return flightDao.getById(flightId)
                 .map(this::toDto)
-                .orElse(null);
+                .orElseThrow(()-> new FlightNotFoundException("Flight not found with ID "+ flightId));
     }
 
     @Override

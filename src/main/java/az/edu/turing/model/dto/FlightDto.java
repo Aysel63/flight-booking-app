@@ -10,7 +10,7 @@ public class FlightDto implements Serializable {
     private final LocalDateTime departureTime;
     private final int availableSeats;
 
-    // Constructor
+
     public FlightDto(long flightId, String destination, String from, LocalDateTime departureTime, int availableSeats) {
         this.flightId = flightId;
         this.destination = destination;

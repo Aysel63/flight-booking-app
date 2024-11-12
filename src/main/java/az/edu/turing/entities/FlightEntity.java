@@ -34,7 +34,7 @@ public class FlightEntity implements Serializable {
     }
 
 
-    public long getFlightId() {
+    public Long getFlightId() {
         return flightId;
     }
 

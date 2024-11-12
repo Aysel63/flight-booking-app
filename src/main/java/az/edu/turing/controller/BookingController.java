@@ -1,6 +1,7 @@
 package az.edu.turing.controller;
 
 import az.edu.turing.model.dto.BookingDto;
+import az.edu.turing.model.dto.request.CreateBookingRequest;
 import az.edu.turing.service.BookingService;
 import az.edu.turing.service.impl.BookingServiceImpl;
 
@@ -15,15 +16,15 @@ public class BookingController {
         this.bookingService = bookingService;
     }
 
-    public BookingDto createBooking(long flightId, String firstName, String lastName) {
-        return bookingService.createBooking(flightId, firstName, lastName);
+    public BookingDto createBooking(CreateBookingRequest createBookingRequest) {
+        return bookingService.createBooking(createBookingRequest);
     }
 
     public boolean cancelBooking(long bookingId) {
         return bookingService.cancelBooking(bookingId);
     }
 
-    public List<BookingDto> findBookingByPassenger(String fullName) {
+    public List<BookingDto> findAllBookingsByPassenger(String fullName) {
         return bookingService.findAllBookingByPassenger(fullName);
     }
 
