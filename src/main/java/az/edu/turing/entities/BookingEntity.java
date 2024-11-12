@@ -2,27 +2,36 @@ package az.edu.turing.entities;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class BookingEntity implements Serializable {
 
-    private int bookingId;
+    private static final long serialVersionUID = 1L;
+    private static final AtomicLong atomicCounter = new AtomicLong(0);
+
+    private final long bookingId;
     private FlightEntity flight;
     private String firstName;
     private String lastName;
 
-    public BookingEntity(int bookingId, FlightEntity flight, String firstName, String lastName) {
+    // BookingId ilə constructor
+    public BookingEntity(long bookingId, FlightEntity flight, String firstName, String lastName) {
         this.bookingId = bookingId;
         this.flight = flight;
         this.firstName = firstName;
         this.lastName = lastName;
     }
 
-    public int getBookingId() {
-        return bookingId;
+
+    public BookingEntity(FlightEntity flight, String firstName, String lastName) {
+        this.bookingId = atomicCounter.incrementAndGet();
+        this.flight = flight;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
-    public void setBookingId(int bookingId) {
-        this.bookingId = bookingId;
+    public long getBookingId() {
+        return bookingId;
     }
 
     public FlightEntity getFlight() {
@@ -49,11 +58,10 @@ public class BookingEntity implements Serializable {
         this.lastName = lastName;
     }
 
-
     @Override
     public String toString() {
-        return "Booking{" +
-                "bookingId='" + bookingId + '\'' +
+        return "BookingEntity{" +
+                "bookingId=" + bookingId +
                 ", flight=" + flight +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
@@ -64,11 +72,11 @@ public class BookingEntity implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BookingEntity booking = (BookingEntity) o;
-        return Objects.equals(bookingId, booking.bookingId) &&
-                Objects.equals(flight, booking.flight) &&
-                Objects.equals(firstName, booking.firstName) &&
-                Objects.equals(lastName, booking.lastName);
+        BookingEntity that = (BookingEntity) o;
+        return bookingId == that.bookingId &&
+                Objects.equals(flight, that.flight) &&
+                Objects.equals(firstName, that.firstName) &&
+                Objects.equals(lastName, that.lastName);
     }
 
     @Override
