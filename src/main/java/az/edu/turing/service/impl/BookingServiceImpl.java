@@ -38,21 +38,21 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingDto createBooking(CreateBookingRequest createBookingRequest) {
-        Optional<FlightEntity> flight = flightDao.getById(createBookingRequest.getFlightId());
-        if (!flight.isPresent()) {
-            throw new FlightNotFoundException("Flight not found with ID: " + createBookingRequest.getFlightId());
+        FlightEntity flight = flightDao.getById(createBookingRequest.getFlightId())
+                .orElseThrow(() -> new FlightNotFoundException("Flight not found with ID: " + createBookingRequest.getFlightId()));
+        {
         }
 
-        BookingEntity bookingEntity = new BookingEntity(flight.get(), createBookingRequest.getFirstName(),createBookingRequest.getLastName());
+        BookingEntity bookingEntity = new BookingEntity(flight, createBookingRequest.getFirstName(), createBookingRequest.getLastName());
         bookingDao.save(bookingEntity);
         return toDto(bookingEntity);
     }
 
     @Override
     public boolean cancelBooking(long bookingId) {
-        Optional<BookingEntity> booking = bookingDao.getById(bookingId);
-        return booking.map(b -> bookingDao.deleteById(bookingId)).
-                orElseThrow(()->new BookingNotFoundException("Booking not found with ID: " + bookingId));
+        BookingEntity bookingEntity = bookingDao.getById(bookingId)
+                .orElseThrow(() -> new BookingNotFoundException("Booking not found with ID: " + bookingId));
+        return bookingDao.deleteById(bookingId);
     }
 
     @Override
