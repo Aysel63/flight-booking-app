@@ -3,48 +3,37 @@ package az.edu.turing.domain.dao.impl;
 import az.edu.turing.domain.dao.FlightDao;
 import az.edu.turing.domain.entities.FlightEntity;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class FlightInMemoryDao extends FlightDao {
-    private static final List<FlightEntity> FLIGHTS = new ArrayList<>();
+    private static final Map<Long, FlightEntity> FLIGHTS = new HashMap<>();
 
     @Override
     public Collection<FlightEntity> getAll() {
-        return List.copyOf(FLIGHTS);
+        return List.copyOf(FLIGHTS.values());
     }
 
     @Override
     public Optional<FlightEntity> getById(Long id) {
-        return FLIGHTS.stream()
-                .filter(flights -> flights.getFlightId().equals(id))
-                .findFirst();
+        return Optional.ofNullable(FLIGHTS.get(id));
     }
 
     @Override
-    public FlightEntity save(FlightEntity object) {
-        FLIGHTS.add(object);
-        return FLIGHTS.get(FLIGHTS.size() - 1); //Avoided using .getLast() method for compatibility matters.
+    public FlightEntity save( final FlightEntity object) {
+        return FLIGHTS.put(object.getFlightId(),object);
     }
 
     @Override
     public boolean deleteById(Long id) {
-        return FLIGHTS.removeIf(flights -> flights.getFlightId().equals(id));
+        return FLIGHTS.remove(id)!=null;
     }
 
     @Override
     public FlightEntity updateAvailableSeats(long flightId, int newAvailableSeatCount) {
-        FlightEntity updatedFlight = null;
-        for (FlightEntity flight : FLIGHTS) {
-            if (flight.getFlightId().equals(flightId)) {
-                flight.setAvailableSeats(newAvailableSeatCount);
-                updatedFlight = flight;
-                break;
-            }
+        var flightEntity=FLIGHTS.get(flightId);
+        if(flightEntity!=null){
+            flightEntity.setAvailableSeats(newAvailableSeatCount);
         }
-
-        return updatedFlight;
+        return flightEntity;
     }
 }

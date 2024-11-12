@@ -8,8 +8,8 @@ public class BookingMapper implements EntityMapper<BookingEntity, BookingDto>{
     public BookingEntity toEntity(BookingDto bookingDto) {
         return new BookingEntity(
                 bookingDto.getBookingId(),
-                bookingDto.getFirstName(),
-                bookingDto.getLastName(),
+                bookingDto.getBookerName(),
+                bookingDto.getBookerSurName(),
                 bookingDto.getFlight()
         );
     }
@@ -18,8 +18,8 @@ public class BookingMapper implements EntityMapper<BookingEntity, BookingDto>{
     public BookingDto toDto(BookingEntity bookingEntity) {
         return new BookingDto(
                 bookingEntity.getBookingId(),
-                bookingEntity.getFirstName(),
-                bookingEntity.getLastName(),
+                bookingEntity.getBookerName(),
+                bookingEntity.getBookerSurName(),
                 bookingEntity.getFlight()
         );
     }

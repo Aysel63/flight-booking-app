@@ -4,6 +4,7 @@ import az.edu.turing.domain.dao.BookingDao;
 import az.edu.turing.domain.dao.FlightDao;
 import az.edu.turing.domain.entities.BookingEntity;
 import az.edu.turing.domain.entities.FlightEntity;
+import az.edu.turing.exception.FlightNotFoundException;
 import az.edu.turing.mapper.BookingMapper;
 import az.edu.turing.model.dto.BookingDto;
 import az.edu.turing.model.dto.request.CreateBookingRequest;
@@ -27,10 +28,11 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingDto createBooking(CreateBookingRequest request) {
-        FlightEntity flight = flightDao.getById(request.getFlightId()).get();
+        FlightEntity flight = flightDao.getById(request.getFlightId())
+                .orElseThrow(()->new FlightNotFoundException("Flight not found with id: " + request.getFlightId()));
 
         BookingEntity savedBooking = bookingDao.save(
-                new BookingEntity(request.getFirstName(), request.getLastName(), flight)
+                new BookingEntity(request.getBookerName(), request.getBookerSurName(), flight)
         );
 
         flightDao.updateAvailableSeats(flight.getFlightId(), flight.getAvailableSeats() - 1);
