@@ -4,7 +4,10 @@ import az.edu.turing.domain.dao.BookingDao;
 import az.edu.turing.domain.dao.FlightDao;
 import az.edu.turing.entities.BookingEntity;
 import az.edu.turing.entities.FlightEntity;
+import az.edu.turing.exception.BookingNotFoundException;
+import az.edu.turing.exception.FlightNotFoundException;
 import az.edu.turing.model.dto.BookingDto;
+import az.edu.turing.model.dto.request.CreateBookingRequest;
 import az.edu.turing.service.BookingService;
 
 import java.util.List;
@@ -34,21 +37,22 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingDto createBooking(long flightId, String firstName, String lastName) {
-        Optional<FlightEntity> flight = flightDao.getById(flightId);
-        if (!flight.isPresent()) {
-            throw new IllegalArgumentException("Flight not found with ID: " + flightId);
+    public BookingDto createBooking(CreateBookingRequest createBookingRequest) {
+        FlightEntity flight = flightDao.getById(createBookingRequest.getFlightId())
+                .orElseThrow(() -> new FlightNotFoundException("Flight not found with ID: " + createBookingRequest.getFlightId()));
+        {
         }
 
-        BookingEntity bookingEntity = new BookingEntity(0, flight.get(), firstName, lastName);
+        BookingEntity bookingEntity = new BookingEntity(flight, createBookingRequest.getFirstName(), createBookingRequest.getLastName());
         bookingDao.save(bookingEntity);
         return toDto(bookingEntity);
     }
 
     @Override
     public boolean cancelBooking(long bookingId) {
-        Optional<BookingEntity> booking = bookingDao.getById(bookingId);
-        return booking.map(b -> bookingDao.deleteById(bookingId)).orElse(false);
+        BookingEntity bookingEntity = bookingDao.getById(bookingId)
+                .orElseThrow(() -> new BookingNotFoundException("Booking not found with ID: " + bookingId));
+        return bookingDao.deleteById(bookingId);
     }
 
     @Override
