@@ -1,7 +1,7 @@
-package az.edu.turing.impl;
+package az.edu.turing.domain.dao.impl;
 
 import az.edu.turing.domain.dao.BookingDao;
-import az.edu.turing.entities.BookingEntity;
+import az.edu.turing.domain.entities.BookingEntity;
 
 import java.util.ArrayList;
 import java.util.Collection;

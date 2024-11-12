@@ -2,8 +2,8 @@ package az.edu.turing.service.impl;
 
 import az.edu.turing.domain.dao.BookingDao;
 import az.edu.turing.domain.dao.FlightDao;
-import az.edu.turing.entities.BookingEntity;
-import az.edu.turing.entities.FlightEntity;
+import az.edu.turing.domain.entities.BookingEntity;
+import az.edu.turing.domain.entities.FlightEntity;
 import az.edu.turing.exception.BookingNotFoundException;
 import az.edu.turing.exception.FlightNotFoundException;
 import az.edu.turing.model.dto.BookingDto;

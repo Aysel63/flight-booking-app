@@ -1,7 +1,7 @@
-package az.edu.turing.impl;
+package az.edu.turing.domain.dao.impl;
 
 import az.edu.turing.domain.dao.FlightDao;
-import az.edu.turing.entities.FlightEntity;
+import az.edu.turing.domain.entities.FlightEntity;
 
 import java.util.ArrayList;
 import java.util.Collection;
