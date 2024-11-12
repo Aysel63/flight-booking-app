@@ -1,7 +1,7 @@
-package az.edu.turing.impl;
+package az.edu.turing.domain.dao.impl;
 
 import az.edu.turing.domain.dao.BookingDao;
-import az.edu.turing.entities.BookingEntity;
+import az.edu.turing.domain.entities.BookingEntity;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.Optional;
 
 public class BookingInMemoryDao extends BookingDao {
-    private static final List<BookingEntity>BOOKINGS = new ArrayList<>();
+    private static final List<BookingEntity> BOOKINGS = new ArrayList<>();
 
     @Override
     public Collection<BookingEntity> getAll() {
-        return BOOKINGS;
+        return List.copyOf(BOOKINGS);
     }
 
     @Override
@@ -26,7 +26,7 @@ public class BookingInMemoryDao extends BookingDao {
     @Override
     public BookingEntity save(BookingEntity object) {
         BOOKINGS.add(object);
-        return object;
+        return BOOKINGS.get(BOOKINGS.size() - 1);
     }
 
     @Override

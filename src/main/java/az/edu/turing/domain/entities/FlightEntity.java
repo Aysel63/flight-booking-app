@@ -1,4 +1,4 @@
-package az.edu.turing.entities;
+package az.edu.turing.domain.entities;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -9,12 +9,12 @@ public class FlightEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private static final AtomicLong atomicCounter = new AtomicLong(0);
+
     private final long flightId;
     private String destination;
     private String from;
     private LocalDateTime departureTime;
     private int availableSeats;
-
 
     public FlightEntity(String destination, String from, LocalDateTime departureTime, int availableSeats) {
         this.flightId = atomicCounter.incrementAndGet();
@@ -86,11 +86,15 @@ public class FlightEntity implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FlightEntity that = (FlightEntity) o;
-        return flightId == that.flightId;
+        return flightId == that.flightId &&
+                availableSeats == that.availableSeats &&
+                Objects.equals(destination, that.destination) &&
+                Objects.equals(from, that.from) &&
+                Objects.equals(departureTime, that.departureTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(flightId);
+        return Objects.hash(flightId, destination, from, departureTime, availableSeats);
     }
 }
