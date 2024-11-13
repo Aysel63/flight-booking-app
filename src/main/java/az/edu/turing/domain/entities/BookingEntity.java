@@ -10,22 +10,22 @@ public class BookingEntity implements Serializable {
     private static final AtomicLong atomicCounter = new AtomicLong(0);
 
     private final long bookingId;
-    private String firstName;
-    private String lastName;
+    private String bookerName;
+    private String bookerSurname;
     private FlightEntity flight;
 
 
-    public BookingEntity(long bookingId, String firstName, String lastName, FlightEntity flight) {
+    public BookingEntity(long bookingId, String bookerName, String bookerSurname, FlightEntity flight) {
         this.bookingId = bookingId;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.bookerName = bookerName;
+        this.bookerSurname = bookerSurname;
         this.flight = flight;
     }
 
-    public BookingEntity(String firstName, String lastName, FlightEntity flight) {
+    public BookingEntity(String bookerName, String bookerSurName, FlightEntity flight) {
         this.bookingId = atomicCounter.incrementAndGet();
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.bookerName = bookerName;
+        this.bookerSurname = bookerSurname;
         this.flight = flight;
     }
 
@@ -41,24 +41,24 @@ public class BookingEntity implements Serializable {
         this.flight = flight;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getBookerName() {
+        return bookerName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setBookerName(String firstName) {
+        this.bookerName = bookerName;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getBookerSurname() {
+        return bookerSurname;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setBookerSurname(String bookerSurname) {
+        this.bookerSurname = bookerSurname;
     }
 
     public String getFullName() {
-        return firstName + " " + lastName;
+        return bookerName + " " + bookerSurname;
     }
 
     @Override
@@ -66,8 +66,8 @@ public class BookingEntity implements Serializable {
         return "BookingEntity{" +
                 "bookingId=" + bookingId +
                 ", flight=" + flight +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
+                ", bookerName='" + bookerName + '\'' +
+                ", bookerSurname='" + bookerSurname + '\'' +
                 '}';
     }
 
@@ -78,12 +78,12 @@ public class BookingEntity implements Serializable {
         BookingEntity that = (BookingEntity) o;
         return bookingId == that.bookingId &&
                 Objects.equals(flight, that.flight) &&
-                Objects.equals(firstName, that.firstName) &&
-                Objects.equals(lastName, that.lastName);
+                Objects.equals(bookerName, that.bookerName) &&
+                Objects.equals(bookerSurname, that.bookerSurname);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bookingId, flight, firstName, lastName);
+        return Objects.hash(bookingId, flight, bookerName, bookerSurname);
     }
 }

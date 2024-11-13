@@ -7,14 +7,14 @@ import java.io.Serializable;
 public class BookingDto implements Serializable {
 
     private final long bookingId;
-    private final String firstName;
-    private final String lastName;
+    private final String bookerName;
+    private final String bookerSurname;
     private final FlightEntity flight;
 
-    public BookingDto(long bookingId, String firstName, String lastName, FlightEntity flight) {
+    public BookingDto(long bookingId, String bookerName, String bookerSurname, FlightEntity flight) {
         this.bookingId = bookingId;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.bookerName = bookerName;
+        this.bookerSurname = bookerSurname;
         this.flight = flight;
     }
 
@@ -27,14 +27,14 @@ public class BookingDto implements Serializable {
     }
 
     public String getFullName() {
-        return firstName + " " + lastName;
+        return bookerName + " " + bookerSurname;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getBookerName() {
+        return bookerName;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getBookerSurname() {
+        return bookerSurname;
     }
 }

@@ -3,10 +3,10 @@ package az.edu.turing.controller;
 import az.edu.turing.model.dto.BookingDto;
 import az.edu.turing.model.dto.request.CreateBookingRequest;
 import az.edu.turing.service.BookingService;
-import az.edu.turing.service.impl.BookingServiceImpl;
+
 
 import java.util.List;
-import java.util.Optional;
+
 
 public class BookingController {
 
@@ -28,7 +28,7 @@ public class BookingController {
         return bookingService.findAllBookingByPassenger(fullName);
     }
 
-    public Optional<BookingDto> getBookingDetails(long bookingId) {
+    public BookingDto getBookingDetails(long bookingId) {
         return bookingService.getBookingDetails(bookingId);
     }
 

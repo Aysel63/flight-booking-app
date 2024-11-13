@@ -14,7 +14,7 @@ public interface BookingService {
 
     List<BookingDto> findAllBookingByPassenger(String fullName);
 
-    Optional<BookingDto> getBookingDetails(long bookingId);
+    BookingDto getBookingDetails(long bookingId);
 
     List<BookingDto> getAllBookings();
 }

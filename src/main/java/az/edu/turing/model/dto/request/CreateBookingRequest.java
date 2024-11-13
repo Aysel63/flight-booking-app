@@ -2,32 +2,32 @@ package az.edu.turing.model.dto.request;
 
 public class CreateBookingRequest {
     private long flightId;
-    private String firstName;
-    private String lastName;
+    private String bookerName;
+    private String bookerSurname;
 
-    public CreateBookingRequest(long flightId, String firstName, String lastName) {
+    public CreateBookingRequest(long flightId, String bookerName, String bookerSurname) {
         this.flightId = flightId;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.bookerName = bookerName;
+        this.bookerSurname = bookerSurname;
     }
 
     public long getFlightId() {
         return flightId;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getBookerName() {
+        return bookerName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setBookerName(String bookerName) {
+        this.bookerName=bookerName;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getBookerSurname() {
+        return bookerSurname;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setBookerSurName(String bookerSurname) {
+        this.bookerSurname = bookerSurname;
     }
 }
