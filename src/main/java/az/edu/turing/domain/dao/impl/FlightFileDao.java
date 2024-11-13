@@ -1,7 +1,7 @@
 package az.edu.turing.domain.dao.impl;
 
 import az.edu.turing.domain.dao.FlightDao;
-import az.edu.turing.domain.entitity.FlightEntity;
+import az.edu.turing.domain.entities.FlightEntity;
 import az.edu.turing.exception.FlightNotFoundException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

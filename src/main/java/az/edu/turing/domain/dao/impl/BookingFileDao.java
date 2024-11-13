@@ -1,7 +1,7 @@
 package az.edu.turing.domain.dao.impl;
 
 import az.edu.turing.domain.dao.BookingDao;
-import az.edu.turing.domain.entitity.BookingEntity;
+import az.edu.turing.domain.entities.BookingEntity;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
