@@ -37,7 +37,7 @@ public class FlightServiceImpl implements FlightService {
     @Override
     public List<FlightDto> findFlights(String destination, LocalDate date, int numberOfPeople) {
         return flightDao.getAll().stream()
-                .filter(f -> f.getDestination().equals(destination))
+                .filter(f -> f.getDestination().equalsIgnoreCase(destination))
                 .filter(f -> f.getDepartureTime().toLocalDate().equals(date))
                 .filter(f -> f.getAvailableSeats() >= numberOfPeople)
                 .map(mapper::toDto)

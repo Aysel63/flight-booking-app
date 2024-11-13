@@ -9,11 +9,13 @@ public class BookingEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final AtomicLong atomicCounter = new AtomicLong(0);
 
-    private final long bookingId;
+    private long bookingId;
     private String bookerName;
     private String bookerSurname;
     private FlightEntity flight;
 
+    public BookingEntity() {
+    }
 
     public BookingEntity(long bookingId, String bookerName, String bookerSurname, FlightEntity flight) {
         this.bookingId = bookingId;
@@ -22,7 +24,7 @@ public class BookingEntity implements Serializable {
         this.flight = flight;
     }
 
-    public BookingEntity(String bookerName, String bookerSurName, FlightEntity flight) {
+    public BookingEntity(String bookerName, String bookerSurname, FlightEntity flight) {
         this.bookingId = atomicCounter.incrementAndGet();
         this.bookerName = bookerName;
         this.bookerSurname = bookerSurname;
