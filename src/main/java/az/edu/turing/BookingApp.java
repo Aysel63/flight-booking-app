@@ -1,7 +1,9 @@
 package az.edu.turing;
 
+import az.edu.turing.util.ConsoleUtil;
+
 public class BookingApp {
     public static void main( String[] args ) {
-        //TODO: inject dependencies, call 'console' class
+        new ConsoleUtil().run();
     }
 }
