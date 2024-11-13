@@ -6,7 +6,7 @@ import az.edu.turing.service.BookingService;
 
 
 import java.util.List;
-import java.util.Optional;
+
 
 public class BookingController {
 
@@ -28,7 +28,7 @@ public class BookingController {
         return bookingService.findAllBookingByPassenger(fullName);
     }
 
-    public Optional<BookingDto> getBookingDetails(long bookingId) {
+    public BookingDto getBookingDetails(long bookingId) {
         return bookingService.getBookingDetails(bookingId);
     }
 
