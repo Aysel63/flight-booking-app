@@ -102,6 +102,12 @@ public class ConsoleUtil {
                                     String passengerName = scanner.nextLine().trim();
                                     System.out.printf("Please enter passenger %d surname: ", i);
                                     String passengerSurname = scanner.nextLine().trim();
+                                    if (!isValidNameAndSurname(passengerName, passengerSurname)) {
+                                        System.out.println("Name and surname must only contain alphabetic characters." +
+                                                " Please try again.");
+                                        i--;
+                                        continue;
+                                    }
 
                                     bookingController.createBooking(
                                             new CreateBookingRequest(flightId, passengerName, passengerSurname)
@@ -192,10 +198,14 @@ public class ConsoleUtil {
 
         long hoursDifference = Math.abs(ChronoUnit.HOURS.between(currentTime, flightDateTime));
 
-        if (hoursDifference > 24 || hoursDifference < 0){
+        if (hoursDifference > 24 || hoursDifference < 0) {
             return false;
         } else {
             return true;
         }
+    }
+
+    private boolean isValidNameAndSurname(String name, String surname) {
+        return name.matches("[a-zA-Z]+") && surname.matches("[a-zA-Z]+");
     }
 }
