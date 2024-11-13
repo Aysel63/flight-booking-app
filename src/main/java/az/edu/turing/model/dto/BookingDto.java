@@ -37,4 +37,11 @@ public class BookingDto implements Serializable {
     public String getBookerSurname() {
         return bookerSurname;
     }
+
+
+    @Override
+    public String toString() {
+        return "Booking ID=%d, Booker's Name='%s', Booker's Surname='%s', Flight=%d}"
+                .formatted(bookingId, bookerName, bookerSurname, flight.getFlightId());
+    }
 }

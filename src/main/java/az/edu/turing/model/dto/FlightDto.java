@@ -38,4 +38,10 @@ public class FlightDto implements Serializable {
     public int getAvailableSeats() {
         return availableSeats;
     }
+
+    @Override
+    public String toString() {
+        return "Flight ID=%d, Destination='%s', From='%s', Departure Time=%s, Available Seats=%d"
+                .formatted(flightId, destination, from, departureTime, availableSeats);
+    }
 }

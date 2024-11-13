@@ -10,11 +10,14 @@ public class FlightEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final AtomicLong atomicCounter = new AtomicLong(0);
 
-    private final long flightId;
+    private long flightId;
     private String destination;
     private String from;
     private LocalDateTime departureTime;
     private int availableSeats;
+
+    public FlightEntity() {
+    }
 
     public FlightEntity(String destination, String from, LocalDateTime departureTime, int availableSeats) {
         this.flightId = atomicCounter.incrementAndGet();
