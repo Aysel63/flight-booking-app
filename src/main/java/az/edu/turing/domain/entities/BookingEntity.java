@@ -31,6 +31,10 @@ public class BookingEntity implements Serializable {
         this.flight = flight;
     }
 
+    public void setBookingId(long bookingId) {
+        this.bookingId = bookingId;
+    }
+
     public Long getBookingId() {
         return bookingId;
     }
