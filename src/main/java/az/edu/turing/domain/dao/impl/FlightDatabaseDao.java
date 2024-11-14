@@ -14,11 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static az.edu.turing.config.DatabaseConfig.getConnection;
-
 public class FlightDatabaseDao extends FlightDao {
 
-    public FlightDatabaseDao() {
+    private final Connection connection;
+
+    public FlightDatabaseDao(Connection connection) {
+        this.connection = connection;
         createFlightTableIfNotExists();
         insertMockFlightDataIfDataNotExists();
     }
@@ -28,8 +29,7 @@ public class FlightDatabaseDao extends FlightDao {
         List<FlightEntity> flights = new ArrayList<>();
         String query = "SELECT * FROM flights";
 
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
 
             while (resultSet.next()) {
@@ -48,8 +48,7 @@ public class FlightDatabaseDao extends FlightDao {
     public Optional<FlightEntity> getById(Long id) {
         String query = "SELECT * FROM flights WHERE flight_id = ?";
 
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setLong(1, id);
 
@@ -71,8 +70,7 @@ public class FlightDatabaseDao extends FlightDao {
     public FlightEntity save(FlightEntity object) {
         String insertFlightQuery = "INSERT INTO flights (destination, from_location, departure_time, available_seats) VALUES (?, ?, ?, ?)";
 
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(insertFlightQuery)) {
+        try (PreparedStatement statement = connection.prepareStatement(insertFlightQuery)) {
 
             statement.setString(1, object.getDestination());
             statement.setString(2, object.getFrom());
@@ -94,8 +92,7 @@ public class FlightDatabaseDao extends FlightDao {
     public boolean deleteById(Long id) {
         String query = "DELETE FROM flights WHERE flight_id = ?";
 
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setLong(1, id);
 
@@ -123,8 +120,7 @@ public class FlightDatabaseDao extends FlightDao {
     public FlightEntity updateAvailableSeats(long flightId, int newAvailableSeatCount) {
         String updateSeatsQuery = "UPDATE flights SET available_seats = ? WHERE flight_id = ?";
 
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(updateSeatsQuery)) {
+        try (PreparedStatement statement = connection.prepareStatement(updateSeatsQuery)) {
 
             statement.setInt(1, newAvailableSeatCount);
             statement.setLong(2, flightId);
@@ -152,8 +148,7 @@ public class FlightDatabaseDao extends FlightDao {
                 );
                 """;
 
-        try (Connection connection = getConnection();
-             Statement statement = connection.createStatement()) {
+        try (Statement statement = connection.createStatement()) {
             result = statement.execute(query);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -164,8 +159,7 @@ public class FlightDatabaseDao extends FlightDao {
 
     private void insertMockFlightDataIfDataNotExists() {
         String checkFlightQuery = "SELECT COUNT(*) FROM flights;";
-        try (Connection connection = getConnection();
-             PreparedStatement checkStatement = connection.prepareStatement(checkFlightQuery)) {
+        try (PreparedStatement checkStatement = connection.prepareStatement(checkFlightQuery)) {
             ResultSet resultSet = checkStatement.executeQuery();
             if (!(resultSet.next() && resultSet.getInt(1) > 0)) {
                 String query = """
