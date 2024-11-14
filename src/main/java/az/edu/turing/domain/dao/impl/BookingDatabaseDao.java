@@ -2,22 +2,30 @@ package az.edu.turing.domain.dao.impl;
 
 import az.edu.turing.domain.dao.BookingDao;
 import az.edu.turing.domain.entities.BookingEntity;
-import az.edu.turing.domain.entities.database.DatabaseConfig;
 import az.edu.turing.domain.entities.FlightEntity;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static az.edu.turing.domain.entities.database.DatabaseConfig.getConnection;
+import static az.edu.turing.config.DatabaseConfig.getConnection;
 
 public class BookingDatabaseDao extends BookingDao {
 
     @Override
     public List<BookingEntity> getAll() {
         List<BookingEntity> bookings = new ArrayList<>();
-        String query = "SELECT * FROM bookings";
+        String query = "SELECT b.booking_id, b.booker_name, b.booker_surname, " +
+                "f.flight_id, f.destination, f.from_location, f.departure_time, f.available_seats " +
+                "FROM bookings b " +
+                "JOIN flights f ON b.flight_id = f.flight_id";
+
+
 
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query);
@@ -37,7 +45,13 @@ public class BookingDatabaseDao extends BookingDao {
 
     @Override
     public Optional<BookingEntity> getById(Long id) {
-        String query = "SELECT * FROM bookings WHERE booking_id = ?";
+        String query = "SELECT b.booking_id, b.booker_name, b.booker_surname, " +
+                "f.flight_id, f.destination, f.from_location, f.departure_time, f.available_seats " +
+                "FROM bookings b " +
+                "JOIN flights f ON b.flight_id = f.flight_id " +
+                "WHERE b.booking_id = ?";
+
+
 
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -114,7 +128,15 @@ public class BookingDatabaseDao extends BookingDao {
         String bookerName = resultSet.getString("booker_name");
         String bookerSurname = resultSet.getString("booker_surname");
 
-        FlightEntity flight = new FlightEntity();
+        FlightEntity flight = new FlightEntity(
+                resultSet.getLong("flight_id"),
+                resultSet.getString("destination"),
+                resultSet.getString("from_location"),
+                resultSet.getTimestamp("departure_time") != null
+                        ? resultSet.getTimestamp("departure_time").toLocalDateTime()
+                        : null,
+                resultSet.getInt("available_seats")
+        );
 
         BookingEntity bookingEntity = new BookingEntity();
         bookingEntity.setBookerName(bookerName);
@@ -123,4 +145,5 @@ public class BookingDatabaseDao extends BookingDao {
 
         return bookingEntity;
     }
+
 }

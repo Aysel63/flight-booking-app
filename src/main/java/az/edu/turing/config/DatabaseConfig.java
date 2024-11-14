@@ -1,4 +1,4 @@
-package az.edu.turing.domain.entities.database;
+package az.edu.turing.config;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

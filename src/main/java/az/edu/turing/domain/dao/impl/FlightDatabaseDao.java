@@ -2,7 +2,6 @@ package az.edu.turing.domain.dao.impl;
 
 import az.edu.turing.domain.dao.FlightDao;
 import az.edu.turing.domain.entities.FlightEntity;
-import az.edu.turing.domain.entities.database.DatabaseConfig;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -10,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.time.LocalDateTime;
 
-import static az.edu.turing.domain.entities.database.DatabaseConfig.getConnection;
+import static az.edu.turing.config.DatabaseConfig.getConnection;
 
 public class FlightDatabaseDao extends FlightDao {
 
