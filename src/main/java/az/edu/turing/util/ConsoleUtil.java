@@ -1,5 +1,6 @@
 package az.edu.turing.util;
 
+import az.edu.turing.config.DatabaseConfig;
 import az.edu.turing.controller.BookingController;
 import az.edu.turing.controller.FlightController;
 import az.edu.turing.domain.dao.BookingDao;
@@ -19,6 +20,8 @@ import az.edu.turing.service.FlightService;
 import az.edu.turing.service.impl.BookingServiceImpl;
 import az.edu.turing.service.impl.FlightServiceImpl;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -28,23 +31,37 @@ import java.util.stream.Collectors;
 
 public class ConsoleUtil {
 
-    private final FlightDao flightDao =
-//            new FlightInMemoryDao();
-//            new FlightFileDao(new ObjectMapper().registerModule(new JavaTimeModule()));
-            new FlightDatabaseDao();
-    private final FlightMapper flightMapper = new FlightMapper();
-    private final FlightService flightService = new FlightServiceImpl(flightDao, flightMapper);
-    private final FlightController flightController = new FlightController(flightService);
+    private final FlightDao flightDao;
+    private final BookingDao bookingDao;
 
-    private final BookingDao bookingDao =
-//            new BookingInMemoryDao();
-//            new BookingFileDao(new ObjectMapper().registerModule(new JavaTimeModule()));
-            new BookingDatabaseDao();
+    private final FlightMapper flightMapper = new FlightMapper();
+    private final FlightService flightService;
+    private final FlightController flightController;
+
     private final BookingMapper bookingMapper = new BookingMapper();
-    private final BookingService bookingService = new BookingServiceImpl(bookingDao, flightDao, bookingMapper);
-    private final BookingController bookingController = new BookingController(bookingService);
+    private final BookingService bookingService;
+    private final BookingController bookingController;
 
     private final Scanner scanner = new Scanner(System.in);
+
+    public ConsoleUtil() {
+        try {
+            Connection connection = DatabaseConfig.getConnection();
+
+            this.flightDao = new FlightDatabaseDao(connection);
+            this.bookingDao = new BookingDatabaseDao(connection);
+
+            this.flightService = new FlightServiceImpl(flightDao, flightMapper);
+            this.flightController = new FlightController(flightService);
+
+            this.bookingService = new BookingServiceImpl(bookingDao, flightDao, bookingMapper);
+            this.bookingController = new BookingController(bookingService);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to initialize database connections");
+        }
+    }
 
     public void run() {
         boolean canLoop = true;
