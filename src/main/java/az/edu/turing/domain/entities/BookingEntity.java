@@ -51,7 +51,7 @@ public class BookingEntity implements Serializable {
         return bookerName;
     }
 
-    public void setBookerName(String firstName) {
+    public void setBookerName(String bookerName) {
         this.bookerName = bookerName;
     }
 

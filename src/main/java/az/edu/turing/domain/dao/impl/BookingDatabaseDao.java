@@ -8,7 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +16,10 @@ import java.util.Optional;
 import static az.edu.turing.config.DatabaseConfig.getConnection;
 
 public class BookingDatabaseDao extends BookingDao {
+
+    public BookingDatabaseDao() {
+        createBBookingTableIfNotExists();
+    }
 
     @Override
     public List<BookingEntity> getAll() {
@@ -75,7 +79,7 @@ public class BookingDatabaseDao extends BookingDao {
     @Override
     public BookingEntity save(BookingEntity object) {
         String checkFlightQuery = "SELECT COUNT(*) FROM flights WHERE flight_id = ?";
-        String insertBookingQuery = "INSERT INTO bookings (booking_id, booker_name, booker_surname, flight_id) VALUES (?, ?, ?, ?)";
+        String insertBookingQuery = "INSERT INTO bookings (booker_name, booker_surname, flight_id) VALUES (?, ?, ?)";
 
         try (Connection connection = getConnection();
              PreparedStatement checkStatement = connection.prepareStatement(checkFlightQuery)) {
@@ -85,10 +89,9 @@ public class BookingDatabaseDao extends BookingDao {
 
             if (resultSet.next() && resultSet.getInt(1) > 0) {
                 try (PreparedStatement insertStatement = connection.prepareStatement(insertBookingQuery)) {
-                    insertStatement.setLong(1, object.getBookingId());
-                    insertStatement.setString(2, object.getBookerName());
-                    insertStatement.setString(3, object.getBookerSurname());
-                    insertStatement.setLong(4, object.getFlight().getFlightId());
+                    insertStatement.setString(1, object.getBookerName());
+                    insertStatement.setString(2, object.getBookerSurname());
+                    insertStatement.setLong(3, object.getFlight().getFlightId());
 
                     int rowsAffected = insertStatement.executeUpdate();
                     if (rowsAffected > 0) {
@@ -147,5 +150,25 @@ public class BookingDatabaseDao extends BookingDao {
         return bookingEntity;
     }
 
+    private boolean createBBookingTableIfNotExists() {
+        boolean result = false;
+        String query = """
+                CREATE TABLE IF NOT EXISTS bookings (
+                    booking_id SERIAL PRIMARY KEY,
+                    booker_name VARCHAR(100) NOT NULL,
+                    booker_surname VARCHAR(100) NOT NULL,
+                    flight_id INTEGER NOT NULL,
+                    CONSTRAINT bookings_flight_id_fkey FOREIGN KEY (flight_id)
+                        REFERENCES flights(flight_id) ON DELETE CASCADE
+                );
+                """;
 
-}
+        try (Connection connection = getConnection();
+             Statement statement = connection.createStatement()) {
+            result = statement.execute(query);
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }}

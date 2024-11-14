@@ -3,15 +3,25 @@ package az.edu.turing.domain.dao.impl;
 import az.edu.turing.domain.dao.FlightDao;
 import az.edu.turing.domain.entities.FlightEntity;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.time.LocalDateTime;
 
 import static az.edu.turing.config.DatabaseConfig.getConnection;
 
 public class FlightDatabaseDao extends FlightDao {
+
+    public FlightDatabaseDao() {
+        createFlightTableIfNotExists();
+        insertMockFlightDataIfDataNotExists();
+    }
 
     @Override
     public List<FlightEntity> getAll() {
@@ -59,16 +69,15 @@ public class FlightDatabaseDao extends FlightDao {
 
     @Override
     public FlightEntity save(FlightEntity object) {
-        String insertFlightQuery = "INSERT INTO flights (flight_id, destination, from_location, departure_time, available_seats) VALUES (?, ?, ?, ?, ?)";
+        String insertFlightQuery = "INSERT INTO flights (destination, from_location, departure_time, available_seats) VALUES (?, ?, ?, ?)";
 
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(insertFlightQuery)) {
 
-            statement.setLong(1, object.getFlightId());
-            statement.setString(2, object.getDestination());
-            statement.setString(3, object.getFrom());
-            statement.setTimestamp(4, Timestamp.valueOf(object.getDepartureTime()));
-            statement.setInt(5, object.getAvailableSeats());
+            statement.setString(1, object.getDestination());
+            statement.setString(2, object.getFrom());
+            statement.setTimestamp(3, Timestamp.valueOf(object.getDepartureTime()));
+            statement.setInt(4, object.getAvailableSeats());
 
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected > 0) {
@@ -129,5 +138,46 @@ public class FlightDatabaseDao extends FlightDao {
         }
 
         return null;
+    }
+
+    private boolean createFlightTableIfNotExists() {
+        boolean result = false;
+        String query = """
+                CREATE TABLE IF NOT EXISTS flights (
+                    flight_id SERIAL PRIMARY KEY,
+                    destination VARCHAR(255) NOT NULL,
+                    from_location VARCHAR(255) NOT NULL,
+                    departure_time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+                    available_seats INTEGER NOT NULL CHECK (available_seats >= 0)
+                );
+                """;
+
+        try (Connection connection = getConnection();
+             Statement statement = connection.createStatement()) {
+            result = statement.execute(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    private void insertMockFlightDataIfDataNotExists() {
+        String checkFlightQuery = "SELECT COUNT(*) FROM flights;";
+        try (Connection connection = getConnection();
+             PreparedStatement checkStatement = connection.prepareStatement(checkFlightQuery)) {
+            ResultSet resultSet = checkStatement.executeQuery();
+            if (!(resultSet.next() && resultSet.getInt(1) > 0)) {
+                String query = """
+                        INSERT INTO flights (destination, from_location, departure_time, available_seats)
+                        VALUES ('New York', 'Kiev', NOW(), 150);
+                        """;
+                try (Statement statement = connection.createStatement()) {
+                    statement.execute(query);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

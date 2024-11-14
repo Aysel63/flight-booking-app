@@ -4,10 +4,10 @@ import az.edu.turing.controller.BookingController;
 import az.edu.turing.controller.FlightController;
 import az.edu.turing.domain.dao.BookingDao;
 import az.edu.turing.domain.dao.FlightDao;
+import az.edu.turing.domain.dao.impl.BookingDatabaseDao;
 import az.edu.turing.domain.dao.impl.BookingFileDao;
-import az.edu.turing.domain.dao.impl.BookingInMemoryDao;
+import az.edu.turing.domain.dao.impl.FlightDatabaseDao;
 import az.edu.turing.domain.dao.impl.FlightFileDao;
-import az.edu.turing.domain.dao.impl.FlightInMemoryDao;
 import az.edu.turing.exception.NotFoundException;
 import az.edu.turing.mapper.BookingMapper;
 import az.edu.turing.mapper.FlightMapper;
@@ -18,8 +18,6 @@ import az.edu.turing.service.BookingService;
 import az.edu.turing.service.FlightService;
 import az.edu.turing.service.impl.BookingServiceImpl;
 import az.edu.turing.service.impl.FlightServiceImpl;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -32,14 +30,16 @@ public class ConsoleUtil {
 
     private final FlightDao flightDao =
 //            new FlightInMemoryDao();
-            new FlightFileDao(new ObjectMapper().registerModule(new JavaTimeModule()));
+//            new FlightFileDao(new ObjectMapper().registerModule(new JavaTimeModule()));
+            new FlightDatabaseDao();
     private final FlightMapper flightMapper = new FlightMapper();
     private final FlightService flightService = new FlightServiceImpl(flightDao, flightMapper);
     private final FlightController flightController = new FlightController(flightService);
 
     private final BookingDao bookingDao =
 //            new BookingInMemoryDao();
-            new BookingFileDao(new ObjectMapper().registerModule(new JavaTimeModule()));
+//            new BookingFileDao(new ObjectMapper().registerModule(new JavaTimeModule()));
+            new BookingDatabaseDao();
     private final BookingMapper bookingMapper = new BookingMapper();
     private final BookingService bookingService = new BookingServiceImpl(bookingDao, flightDao, bookingMapper);
     private final BookingController bookingController = new BookingController(bookingService);
