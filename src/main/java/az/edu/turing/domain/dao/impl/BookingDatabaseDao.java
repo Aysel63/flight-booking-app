@@ -139,11 +139,13 @@ public class BookingDatabaseDao extends BookingDao {
         );
 
         BookingEntity bookingEntity = new BookingEntity();
+        bookingEntity.setBookingId(resultSet.getLong("booking_id"));
         bookingEntity.setBookerName(bookerName);
         bookingEntity.setBookerSurname(bookerSurname);
         bookingEntity.setFlight(flight);
 
         return bookingEntity;
     }
+
 
 }
