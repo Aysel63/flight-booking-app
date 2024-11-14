@@ -13,12 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static az.edu.turing.config.DatabaseConfig.getConnection;
-
 public class BookingDatabaseDao extends BookingDao {
 
-    public BookingDatabaseDao() {
-        createBBookingTableIfNotExists();
+    private final Connection connection;
+
+    public BookingDatabaseDao(Connection connection) {
+        this.connection = connection;
+        createBookingTableIfNotExists();
     }
 
     @Override
@@ -29,10 +30,7 @@ public class BookingDatabaseDao extends BookingDao {
                 "FROM bookings b " +
                 "JOIN flights f ON b.flight_id = f.flight_id";
 
-
-
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
 
             while (resultSet.next()) {
@@ -55,10 +53,7 @@ public class BookingDatabaseDao extends BookingDao {
                 "JOIN flights f ON b.flight_id = f.flight_id " +
                 "WHERE b.booking_id = ?";
 
-
-
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setLong(1, id);
 
@@ -81,8 +76,7 @@ public class BookingDatabaseDao extends BookingDao {
         String checkFlightQuery = "SELECT COUNT(*) FROM flights WHERE flight_id = ?";
         String insertBookingQuery = "INSERT INTO bookings (booker_name, booker_surname, flight_id) VALUES (?, ?, ?)";
 
-        try (Connection connection = getConnection();
-             PreparedStatement checkStatement = connection.prepareStatement(checkFlightQuery)) {
+        try (PreparedStatement checkStatement = connection.prepareStatement(checkFlightQuery)) {
 
             checkStatement.setLong(1, object.getFlight().getFlightId());
             ResultSet resultSet = checkStatement.executeQuery();
@@ -113,8 +107,7 @@ public class BookingDatabaseDao extends BookingDao {
     public boolean deleteById(Long id) {
         String query = "DELETE FROM bookings WHERE booking_id = ?";
 
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setLong(1, id);
             int rowsAffected = statement.executeUpdate();
@@ -150,7 +143,7 @@ public class BookingDatabaseDao extends BookingDao {
         return bookingEntity;
     }
 
-    private boolean createBBookingTableIfNotExists() {
+    private boolean createBookingTableIfNotExists() {
         boolean result = false;
         String query = """
                 CREATE TABLE IF NOT EXISTS bookings (
@@ -163,12 +156,12 @@ public class BookingDatabaseDao extends BookingDao {
                 );
                 """;
 
-        try (Connection connection = getConnection();
-             Statement statement = connection.createStatement()) {
+        try (Statement statement = connection.createStatement()) {
             result = statement.execute(query);
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return result;
-    }}
+    }
+}
