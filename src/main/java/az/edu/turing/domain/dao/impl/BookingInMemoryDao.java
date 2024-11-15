@@ -26,7 +26,8 @@ public class BookingInMemoryDao extends BookingDao {
 
     @Override
     public BookingEntity save(final BookingEntity object) {
-        return BOOKINGS.put(object.getBookingId(), object);
+        BOOKINGS.put(object.getBookingId(), object);
+        return BOOKINGS.get(object.getBookingId());
     }
 
     @Override

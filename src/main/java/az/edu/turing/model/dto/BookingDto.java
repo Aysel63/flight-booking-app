@@ -3,6 +3,7 @@ package az.edu.turing.model.dto;
 import az.edu.turing.domain.entities.FlightEntity;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class BookingDto implements Serializable {
 
@@ -43,5 +44,21 @@ public class BookingDto implements Serializable {
     public String toString() {
         return "Booking ID=%d, Booker's Name='%s', Booker's Surname='%s', Flight=%d}"
                 .formatted(bookingId, bookerName, bookerSurname, flight.getFlightId());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BookingDto that = (BookingDto) o;
+        return bookingId == that.bookingId &&
+                Objects.equals(bookerName, that.bookerName) &&
+                Objects.equals(bookerSurname, that.bookerSurname) &&
+                Objects.equals(flight, that.flight);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(bookingId, bookerName, bookerSurname, flight);
     }
 }

@@ -25,7 +25,8 @@ public class FlightInMemoryDao extends FlightDao {
 
     @Override
     public FlightEntity save( final FlightEntity object) {
-        return FLIGHTS.put(object.getFlightId(),object);
+        FLIGHTS.put(object.getFlightId(),object);
+        return FLIGHTS.get(object.getFlightId());
     }
 
     @Override
