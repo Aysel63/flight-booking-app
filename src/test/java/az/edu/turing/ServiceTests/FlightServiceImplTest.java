@@ -6,14 +6,12 @@ import az.edu.turing.exception.FlightNotFoundException;
 import az.edu.turing.mapper.FlightMapper;
 import az.edu.turing.model.dto.FlightDto;
 import az.edu.turing.service.impl.FlightServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,38 +20,6 @@ class FlightServiceImplTest {
     private FlightServiceImpl flightService;
     private FlightDao flightDao;
     private FlightMapper mapper;
-
-    @BeforeEach
-    void setUp() {
-        flightDao = new FlightDao() {
-            @Override
-            public Collection<FlightEntity> getAll() {
-                return List.of();
-            }
-
-            @Override
-            public Optional<FlightEntity> getById(Long id) {
-                return Optional.empty();
-            }
-
-            @Override
-            public FlightEntity save(FlightEntity object) {
-                return null;
-            }
-
-            @Override
-            public boolean deleteById(Long id) {
-                return false;
-            }
-
-            @Override
-            public FlightEntity updateAvailableSeats(long flightId, int newAvailableSeatCount) {
-                return null;
-            }
-        };
-        mapper = new FlightMapper();
-        flightService = new FlightServiceImpl(flightDao, mapper);
-    }
 
     @Test
     void testGetFlightById_Success() {
