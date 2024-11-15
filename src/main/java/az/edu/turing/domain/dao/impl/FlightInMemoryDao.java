@@ -3,6 +3,7 @@ package az.edu.turing.domain.dao.impl;
 import az.edu.turing.domain.dao.FlightDao;
 import az.edu.turing.domain.entities.FlightEntity;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +13,10 @@ import java.util.Optional;
 
 public class FlightInMemoryDao extends FlightDao {
     private static final Map<Long, FlightEntity> FLIGHTS = new HashMap<>();
+
+    public FlightInMemoryDao() {
+        loadMockFlight();
+    }
 
     @Override
     public Collection<FlightEntity> getAll() {
@@ -41,5 +46,16 @@ public class FlightInMemoryDao extends FlightDao {
             flightEntity.setAvailableSeats(newAvailableSeatCount);
         }
         return flightEntity;
+    }
+
+    public void loadMockFlight() {
+        FlightEntity flight = new FlightEntity(
+                101,
+                "New York",
+                "Kiev",
+                LocalDateTime.now().plusHours(2),
+                150
+        );
+        FLIGHTS.put(flight.getFlightId(), flight);
     }
 }

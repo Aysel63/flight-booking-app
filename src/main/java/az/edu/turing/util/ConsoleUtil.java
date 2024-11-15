@@ -6,8 +6,10 @@ import az.edu.turing.domain.dao.BookingDao;
 import az.edu.turing.domain.dao.FlightDao;
 import az.edu.turing.domain.dao.impl.BookingDatabaseDao;
 import az.edu.turing.domain.dao.impl.BookingFileDao;
+import az.edu.turing.domain.dao.impl.BookingInMemoryDao;
 import az.edu.turing.domain.dao.impl.FlightDatabaseDao;
 import az.edu.turing.domain.dao.impl.FlightFileDao;
+import az.edu.turing.domain.dao.impl.FlightInMemoryDao;
 import az.edu.turing.exception.NotFoundException;
 import az.edu.turing.mapper.BookingMapper;
 import az.edu.turing.mapper.FlightMapper;
@@ -29,17 +31,17 @@ import java.util.stream.Collectors;
 public class ConsoleUtil {
 
     private final FlightDao flightDao =
-//            new FlightInMemoryDao();
+            new FlightInMemoryDao();
 //            new FlightFileDao(new ObjectMapper().registerModule(new JavaTimeModule()));
-            new FlightDatabaseDao();
+//            new FlightDatabaseDao();
     private final FlightMapper flightMapper = new FlightMapper();
     private final FlightService flightService = new FlightServiceImpl(flightDao, flightMapper);
     private final FlightController flightController = new FlightController(flightService);
 
     private final BookingDao bookingDao =
-//            new BookingInMemoryDao();
+            new BookingInMemoryDao();
 //            new BookingFileDao(new ObjectMapper().registerModule(new JavaTimeModule()));
-            new BookingDatabaseDao();
+//            new BookingDatabaseDao();
     private final BookingMapper bookingMapper = new BookingMapper();
     private final BookingService bookingService = new BookingServiceImpl(bookingDao, flightDao, bookingMapper);
     private final BookingController bookingController = new BookingController(bookingService);
