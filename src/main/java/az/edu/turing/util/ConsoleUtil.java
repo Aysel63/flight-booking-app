@@ -20,6 +20,8 @@ import az.edu.turing.service.BookingService;
 import az.edu.turing.service.FlightService;
 import az.edu.turing.service.impl.BookingServiceImpl;
 import az.edu.turing.service.impl.FlightServiceImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -31,16 +33,16 @@ import java.util.stream.Collectors;
 public class ConsoleUtil {
 
     private final FlightDao flightDao =
-            new FlightInMemoryDao();
-//            new FlightFileDao(new ObjectMapper().registerModule(new JavaTimeModule()));
+//            new FlightInMemoryDao();
+            new FlightFileDao(new ObjectMapper().registerModule(new JavaTimeModule()));
 //            new FlightDatabaseDao();
     private final FlightMapper flightMapper = new FlightMapper();
     private final FlightService flightService = new FlightServiceImpl(flightDao, flightMapper);
     private final FlightController flightController = new FlightController(flightService);
 
     private final BookingDao bookingDao =
-            new BookingInMemoryDao();
-//            new BookingFileDao(new ObjectMapper().registerModule(new JavaTimeModule()));
+//            new BookingInMemoryDao();
+            new BookingFileDao(new ObjectMapper().registerModule(new JavaTimeModule()));
 //            new BookingDatabaseDao();
     private final BookingMapper bookingMapper = new BookingMapper();
     private final BookingService bookingService = new BookingServiceImpl(bookingDao, flightDao, bookingMapper);
@@ -57,7 +59,7 @@ public class ConsoleUtil {
                 scanner.nextLine();
 
                 switch (choice) {
-                    case 1 -> displayAllFlightsWithing24Hours();
+                    case 1 -> flightController.getAllFlightsWithin24Hours();
                     case 2 -> {
                         System.out.print("Please enter flight ID: ");
                         long flightId = Long.parseLong(scanner.nextLine().trim());
@@ -136,10 +138,6 @@ public class ConsoleUtil {
                     }
                     case 6 -> {
                         System.out.println("Exiting....");
-                        if ((flightDao instanceof FlightFileDao) && (bookingDao instanceof BookingFileDao)) {
-                            ((FlightFileDao) flightDao).saveOnShutdown();
-                            ((BookingFileDao) bookingDao).saveOnShutdown();
-                        }
                         canLoop = false;
                     }
                     default -> System.out.println("Wrong choice. Try Again");
@@ -171,40 +169,6 @@ public class ConsoleUtil {
                 0. Return back to main menu
                 1. Select one of the flights
                 """);
-    }
-
-    public void displayAllFlightsWithing24Hours() {
-        List<FlightDto> flightsWithin24Hours = flightController.getAllFlights().stream()
-                .filter(this::checkIfFlightIsWithin24Hours)
-                .collect(Collectors.toList());
-
-
-        if (flightsWithin24Hours.isEmpty()) {
-            System.err.println("No flights within 24 hours found");
-        } else {
-            flightsWithin24Hours.forEach(System.out::println);
-        }
-    }
-
-    public boolean checkIfFlightIsWithin24Hours(FlightDto flight) {
-        LocalDateTime currentTime = LocalDateTime.now();
-        LocalDateTime flightDateTime = flight.getDepartureTime();
-
-        if (currentTime.getYear() != flightDateTime.getYear()) {
-            return false;
-        }
-
-        if (currentTime.getMonthValue() != flightDateTime.getMonthValue()) {
-            return false;
-        }
-
-        long hoursDifference = Math.abs(ChronoUnit.HOURS.between(currentTime, flightDateTime));
-
-        if (hoursDifference > 24 || hoursDifference < 0) {
-            return false;
-        } else {
-            return true;
-        }
     }
 
     private boolean isValidNameAndSurname(String name, String surname) {

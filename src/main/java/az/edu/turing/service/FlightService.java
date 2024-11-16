@@ -11,5 +11,7 @@ public interface FlightService {
 
     List<FlightDto> getAllFlights();
 
+    List<FlightDto> getAllFlightsWithin24Hours();
+
     List<FlightDto> findFlights(String destination, LocalDate date, int numberOfPeople);
 }

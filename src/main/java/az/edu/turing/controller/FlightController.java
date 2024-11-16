@@ -22,6 +22,10 @@ public class FlightController {
         return flightService.getAllFlights();
     }
 
+    public List<FlightDto> getAllFlightsWithin24Hours() {
+        //TODO: call service method related to this method
+    }
+
     public List<FlightDto> findFlights(String destination, LocalDate date, int numberOfPeople) {
         return flightService.findFlights(destination, date, numberOfPeople);
     }
