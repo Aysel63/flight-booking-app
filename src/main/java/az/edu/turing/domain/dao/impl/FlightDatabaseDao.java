@@ -140,6 +140,33 @@ public class FlightDatabaseDao extends FlightDao {
         return null;
     }
 
+    @Override
+    public List<FlightEntity> getFlightsWithin24Hours(LocalDateTime now, LocalDateTime twentyFourHoursLater) {
+        List<FlightEntity> flights = new ArrayList<>();
+        String query = """
+                SELECT flight_id, destination, from_location, departure_time, available_seats
+                FROM flights
+                WHERE departure_time BETWEEN NOW() AND NOW() + INTERVAL '1 DAY'
+                """;
+
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    FlightEntity flight = mapRowToFlightEntity(resultSet);
+                    flights.add(flight);
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Database error while fetching flights within 24 hours: " + e.getMessage());
+        }
+
+        return flights;
+    }
+
+
     private boolean createFlightTableIfNotExists() {
         boolean result = false;
         String query = """

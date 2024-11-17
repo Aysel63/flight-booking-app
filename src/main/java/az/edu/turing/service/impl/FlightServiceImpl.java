@@ -7,6 +7,7 @@ import az.edu.turing.model.dto.FlightDto;
 import az.edu.turing.service.FlightService;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +34,18 @@ public class FlightServiceImpl implements FlightService {
                 .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<FlightDto> getAllFlightsWithin24Hours() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime twentyFourHoursLater = now.plusHours(24);
+
+        return flightDao.getFlightsWithin24Hours(now, twentyFourHoursLater)
+                .parallelStream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
+    }
+
 
     @Override
     public List<FlightDto> findFlights(String destination, LocalDate date, int numberOfPeople) {

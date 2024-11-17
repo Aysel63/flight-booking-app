@@ -3,7 +3,6 @@ package az.edu.turing.domain.dao.impl;
 import az.edu.turing.domain.dao.BookingDao;
 import az.edu.turing.domain.entities.BookingEntity;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,9 +13,10 @@ public class BookingInMemoryDao extends BookingDao {
     private static final Map<Long, BookingEntity> BOOKINGS = new HashMap<>();
 
     @Override
-    public Collection<BookingEntity> getAll() {
+    public List<BookingEntity> getAll() {
         return List.copyOf(BOOKINGS.values());
     }
+
 
     @Override
     public Optional<BookingEntity> getById(Long id) {
