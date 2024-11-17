@@ -24,7 +24,7 @@ public class FlightServiceImpl implements FlightService {
     public FlightDto getFlightById(long flightId) {
         return flightDao.getById(flightId)
                 .map(mapper::toDto)
-                .orElseThrow(()->new FlightNotFoundException("Flight not found with id: " + flightId));
+                .orElseThrow(() -> new FlightNotFoundException("Flight not found with id: " + flightId));
     }
 
     @Override
@@ -33,6 +33,15 @@ public class FlightServiceImpl implements FlightService {
                 .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<FlightDto> getAllFlightsWithin24Hours() {
+        return flightDao
+                .getAllFlightsWithin24Hours().stream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
+    }
+
 
     @Override
     public List<FlightDto> findFlights(String destination, LocalDate date, int numberOfPeople) {
