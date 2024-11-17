@@ -14,7 +14,7 @@ public class BookingInMemoryDao extends BookingDao {
     private static final Map<Long, BookingEntity> BOOKINGS = new HashMap<>();
 
     @Override
-    public Collection<BookingEntity> getAll() {
+    public List<BookingEntity> getAll() {
         return List.copyOf(BOOKINGS.values());
     }
 
