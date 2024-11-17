@@ -49,7 +49,7 @@ public class FlightFileDao extends FlightDao {
     }
 
     public List<FlightEntity> getAllFlightsWithin24Hours() {
-        List<FlightEntity> flights = new ArrayList<>();
+        List<FlightEntity> flightsWithin24Hours = new ArrayList<>();
         File directory = new File(FLIGHTS_RESOURCE_PATH);
         File[] files = directory.listFiles((dir, name) -> name.endsWith(".json"));
 
@@ -57,7 +57,9 @@ public class FlightFileDao extends FlightDao {
             for (File file : files) {
                 try {
                     FlightEntity object = objectMapper.readValue(file, FlightEntity.class);
-                    flights.add(object);
+                    if (isFlightWithin24Hours(object)) {
+                        flightsWithin24Hours.add(object);
+                    }
                 } catch (IOException e) {
                     System.err.println("error reading files in FlightFileDao.getAll() method");
                     throw new RuntimeException(e);
@@ -65,7 +67,7 @@ public class FlightFileDao extends FlightDao {
             }
         }
 
-        return flights;
+        return flightsWithin24Hours;
     }
 
     @Override
@@ -113,11 +115,6 @@ public class FlightFileDao extends FlightDao {
         return save(flightById);
     }
 
-    public boolean doesFlightExistById(long flightId) {
-        Path filePath = Paths.get(FLIGHTS_RESOURCE_PATH, flightId + ".json");
-        return Files.exists(filePath);
-    }
-
     private void ensureFolderExists() {
         if (FLIGHTS_RESOURCE_PATH == null || FLIGHTS_RESOURCE_PATH.isBlank()) {
             throw new IllegalArgumentException("FLIGHTS_RESOURCE_PATH environment variable is not set or is empty.");
@@ -129,13 +126,13 @@ public class FlightFileDao extends FlightDao {
             try {
                 Files.createDirectories(folderPath);
             } catch (IOException e) {
-                System.err.println("error creating folder in ensureFolderExists method of FlightFamilyDao");
+                System.err.println("error creating folder in ensureFolderExists method of FlightFileDao");
                 throw new RuntimeException(e);
             }
         }
     }
 
-    public boolean checkIfFlightIsWithin24Hours(FlightEntity flight) {
+    public boolean isFlightWithin24Hours(FlightEntity flight) {
         LocalDateTime currentTime = LocalDateTime.now();
         LocalDateTime flightDateTime = flight.getDepartureTime();
 

@@ -2,7 +2,7 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-src/main/resources/file-configs.env
+src/main/resources/*.env
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
