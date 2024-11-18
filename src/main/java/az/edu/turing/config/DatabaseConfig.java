@@ -6,16 +6,17 @@ import java.sql.SQLException;
 
 public class DatabaseConfig {
 
-    private static final String URL = "jdbc:postgresql://localhost:5437/lastdatabase";
-    private static final String USER = "myuser";
-    private static final String PASSWORD = "mypassword";
+    private static final String URL = System.getenv("DATABASE_URL");
+    private static final String USER = System.getenv("POSTGRES_USER");
+    private static final String PASSWORD = System.getenv("POSTGRES_PASSWORD");
 
-    public static Connection getConnection() throws SQLException {
+    public static Connection getConnection() {
+        Connection connection = null;
         try {
-            return DriverManager.getConnection(URL, USER, PASSWORD);
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new SQLException("Failed to create a connection to the database", e);
         }
+        return connection;
     }
 }
