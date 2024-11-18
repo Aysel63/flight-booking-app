@@ -4,7 +4,6 @@ import az.edu.turing.model.dto.BookingDto;
 import az.edu.turing.model.dto.request.CreateBookingRequest;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface BookingService {
 
