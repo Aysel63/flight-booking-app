@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class FlightDto implements Serializable {
+
     private final long flightId;
     private final String destination;
     private final String from;
