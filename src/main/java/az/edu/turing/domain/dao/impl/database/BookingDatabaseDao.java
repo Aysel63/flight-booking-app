@@ -15,16 +15,19 @@ public class BookingDatabaseDao extends BookingDao {
 
     public BookingDatabaseDao(Connection connection) {
         this.connection = connection;
-        createBBookingTableIfNotExists();
+        createBookingTableIfNotExists();
     }
 
     @Override
     public List<BookingEntity> getAll() {
         List<BookingEntity> bookings = new ArrayList<>();
-        String query = "SELECT b.booking_id, b.booker_name, b.booker_surname, " +
-                "f.flight_id, f.destination, f.from_location, f.departure_time, f.available_seats " +
-                "FROM bookings b " +
-                "JOIN flights f ON b.flight_id = f.flight_id";
+        String query = """
+                SELECT b.booking_id, b.booker_name, b.booker_surname,
+                           f.flight_id, f.destination, f.from_location,
+                           f.departure_time, f.available_seats
+                      FROM bookings b
+                      JOIN flights f ON b.flight_id = f.flight_id;
+                """;
 
         try (PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
@@ -43,11 +46,14 @@ public class BookingDatabaseDao extends BookingDao {
 
     @Override
     public Optional<BookingEntity> getById(Long id) {
-        String query = "SELECT b.booking_id, b.booker_name, b.booker_surname, " +
-                "f.flight_id, f.destination, f.from_location, f.departure_time, f.available_seats " +
-                "FROM bookings b " +
-                "JOIN flights f ON b.flight_id = f.flight_id " +
-                "WHERE b.booking_id = ?";
+        String query = """
+                SELECT b.booking_id, b.booker_name, b.booker_surname,
+                               f.flight_id, f.destination, f.from_location,
+                               f.departure_time, f.available_seats
+                          FROM bookings b
+                          JOIN flights f ON b.flight_id = f.flight_id
+                         WHERE b.booking_id = ?;
+                """;
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
@@ -68,14 +74,15 @@ public class BookingDatabaseDao extends BookingDao {
 
     @Override
     public BookingEntity save(BookingEntity bookingEntity) {
-        String checkFlightQuery = "SELECT COUNT(*) FROM flights WHERE flight_id = ?";
-        String insertBookingQuery = "INSERT INTO bookings (booker_name, booker_surname, flight_id) VALUES (?, ?, ?)";
+        String checkFlightQuery = """
+                SELECT COUNT(*) FROM flights WHERE flight_id = ?;
+                """;
+        String insertBookingQuery = """
+                INSERT INTO bookings (booker_name, booker_surname, flight_id) VALUES (?, ?, ?);
+                """;
 
         try {
-            // Transaksiyanı başlat
-            connection.setAutoCommit(false); // Transaksiyanı başlat
-
-            // Savepoint təyin et
+            connection.setAutoCommit(false);
             Savepoint savepoint = connection.setSavepoint("Savepoint1");
 
             try (PreparedStatement checkStatement = connection.prepareStatement(checkFlightQuery)) {
@@ -83,29 +90,26 @@ public class BookingDatabaseDao extends BookingDao {
                 ResultSet resultSet = checkStatement.executeQuery();
 
                 if (resultSet.next() && resultSet.getInt(1) > 0) {
-                    // Booking əlavə et
                     BookingEntity savedBooking = insertBooking(bookingEntity, insertBookingQuery);
 
                     if (savedBooking != null) {
-                        // Əgər əməliyyat uğurludursa, commit et
+
                         connection.commit();
                         return savedBooking;
                     }
                 } else {
-                    // Flight mövcud deyil, səhv qaytar
-                    throw new SQLException("Flight with ID " + bookingEntity.getFlight().getFlightId() + " does not exist.");
+                    throw new SQLException("Flight with ID " + bookingEntity.getFlight().getFlightId()
+                                           + " does not exist.");
                 }
             } catch (SQLException e) {
-                // Əgər səhv baş verərsə, savepoint-a geri dön
                 connection.rollback(savepoint);
                 e.printStackTrace();
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            // Transaksiyanı sıfırla
             try {
-                connection.setAutoCommit(true); // Auto commit rejimini yenidən aç
+                connection.setAutoCommit(true);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -113,7 +117,6 @@ public class BookingDatabaseDao extends BookingDao {
 
         return null;
     }
-
 
     private BookingEntity insertBooking(BookingEntity bookingEntity, String insertBookingQuery) throws SQLException {
         try (PreparedStatement insertStatement = connection.prepareStatement(insertBookingQuery)) {
@@ -122,26 +125,43 @@ public class BookingDatabaseDao extends BookingDao {
             insertStatement.setLong(3, bookingEntity.getFlight().getFlightId());
 
             int rowsAffected = insertStatement.executeUpdate();
-            if (rowsAffected > 0) {
-                return bookingEntity;
-            }
+            return rowsAffected > 0 ? bookingEntity : null;
         }
-        return null;
     }
 
     @Override
     public boolean deleteById(Long id) {
-        String query = "DELETE FROM bookings WHERE booking_id = ?";
+        String query = """
+                DELETE FROM bookings WHERE booking_id = ?;
+                """;
+        try {
+            connection.setAutoCommit(false);
 
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setLong(1, id);
-            int rowsAffected = statement.executeUpdate();
-            return rowsAffected > 0;
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setLong(1, id);
+                int rowsAffected = statement.executeUpdate();
 
+                if (rowsAffected > 0) {
+                    connection.commit();
+                    return true;
+                }
+            }
+
+            connection.rollback();
         } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
             e.printStackTrace();
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-
         return false;
     }
 
@@ -168,7 +188,7 @@ public class BookingDatabaseDao extends BookingDao {
         return bookingEntity;
     }
 
-    private boolean createBBookingTableIfNotExists() {
+    private boolean createBookingTableIfNotExists() {
         boolean result = false;
         String query = """
                 CREATE TABLE IF NOT EXISTS bookings (
