@@ -1,23 +1,20 @@
-package az.edu.turing.domain.dao.impl;
+package az.edu.turing.domain.dao.impl.database;
 
 import az.edu.turing.domain.dao.BookingDao;
 import az.edu.turing.domain.entities.BookingEntity;
 import az.edu.turing.domain.entities.FlightEntity;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static az.edu.turing.config.DatabaseConfig.getConnection;
-
 public class BookingDatabaseDao extends BookingDao {
 
-    public BookingDatabaseDao() {
+    private final Connection connection;
+
+    public BookingDatabaseDao(Connection connection) {
+        this.connection = connection;
         createBBookingTableIfNotExists();
     }
 
@@ -29,10 +26,7 @@ public class BookingDatabaseDao extends BookingDao {
                 "FROM bookings b " +
                 "JOIN flights f ON b.flight_id = f.flight_id";
 
-
-
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
 
             while (resultSet.next()) {
@@ -55,11 +49,7 @@ public class BookingDatabaseDao extends BookingDao {
                 "JOIN flights f ON b.flight_id = f.flight_id " +
                 "WHERE b.booking_id = ?";
 
-
-
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
 
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -77,35 +67,65 @@ public class BookingDatabaseDao extends BookingDao {
     }
 
     @Override
-    public BookingEntity save(BookingEntity object) {
+    public BookingEntity save(BookingEntity bookingEntity) {
         String checkFlightQuery = "SELECT COUNT(*) FROM flights WHERE flight_id = ?";
         String insertBookingQuery = "INSERT INTO bookings (booker_name, booker_surname, flight_id) VALUES (?, ?, ?)";
 
-        try (Connection connection = getConnection();
-             PreparedStatement checkStatement = connection.prepareStatement(checkFlightQuery)) {
+        try {
+            // Transaksiyanı başlat
+            connection.setAutoCommit(false); // Transaksiyanı başlat
 
-            checkStatement.setLong(1, object.getFlight().getFlightId());
-            ResultSet resultSet = checkStatement.executeQuery();
+            // Savepoint təyin et
+            Savepoint savepoint = connection.setSavepoint("Savepoint1");
 
-            if (resultSet.next() && resultSet.getInt(1) > 0) {
-                try (PreparedStatement insertStatement = connection.prepareStatement(insertBookingQuery)) {
-                    insertStatement.setString(1, object.getBookerName());
-                    insertStatement.setString(2, object.getBookerSurname());
-                    insertStatement.setLong(3, object.getFlight().getFlightId());
+            try (PreparedStatement checkStatement = connection.prepareStatement(checkFlightQuery)) {
+                checkStatement.setLong(1, bookingEntity.getFlight().getFlightId());
+                ResultSet resultSet = checkStatement.executeQuery();
 
-                    int rowsAffected = insertStatement.executeUpdate();
-                    if (rowsAffected > 0) {
-                        return object;
+                if (resultSet.next() && resultSet.getInt(1) > 0) {
+                    // Booking əlavə et
+                    BookingEntity savedBooking = insertBooking(bookingEntity, insertBookingQuery);
+
+                    if (savedBooking != null) {
+                        // Əgər əməliyyat uğurludursa, commit et
+                        connection.commit();
+                        return savedBooking;
                     }
+                } else {
+                    // Flight mövcud deyil, səhv qaytar
+                    throw new SQLException("Flight with ID " + bookingEntity.getFlight().getFlightId() + " does not exist.");
                 }
-            } else {
-                throw new SQLException("Flight with ID " + object.getFlight().getFlightId() + " does not exist.");
+            } catch (SQLException e) {
+                // Əgər səhv baş verərsə, savepoint-a geri dön
+                connection.rollback(savepoint);
+                e.printStackTrace();
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            // Transaksiyanı sıfırla
+            try {
+                connection.setAutoCommit(true); // Auto commit rejimini yenidən aç
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
+        return null;
+    }
+
+
+    private BookingEntity insertBooking(BookingEntity bookingEntity, String insertBookingQuery) throws SQLException {
+        try (PreparedStatement insertStatement = connection.prepareStatement(insertBookingQuery)) {
+            insertStatement.setString(1, bookingEntity.getBookerName());
+            insertStatement.setString(2, bookingEntity.getBookerSurname());
+            insertStatement.setLong(3, bookingEntity.getFlight().getFlightId());
+
+            int rowsAffected = insertStatement.executeUpdate();
+            if (rowsAffected > 0) {
+                return bookingEntity;
+            }
+        }
         return null;
     }
 
@@ -113,9 +133,7 @@ public class BookingDatabaseDao extends BookingDao {
     public boolean deleteById(Long id) {
         String query = "DELETE FROM bookings WHERE booking_id = ?";
 
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
             int rowsAffected = statement.executeUpdate();
             return rowsAffected > 0;
@@ -163,12 +181,12 @@ public class BookingDatabaseDao extends BookingDao {
                 );
                 """;
 
-        try (Connection connection = getConnection();
-             Statement statement = connection.createStatement()) {
+        try (Statement statement = connection.createStatement()) {
             result = statement.execute(query);
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return result;
-    }}
+    }
+}
