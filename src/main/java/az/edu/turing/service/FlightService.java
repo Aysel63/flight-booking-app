@@ -4,7 +4,6 @@ import az.edu.turing.model.dto.FlightDto;
 import java.time.LocalDate;
 import java.util.List;
 
-
 public interface FlightService {
 
     FlightDto getFlightById(long flightId);
