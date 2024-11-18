@@ -1,6 +1,6 @@
 package az.edu.turing.controller;
 
-import az.edu.turing.domain.dao.impl.FlightInMemoryDao;
+import az.edu.turing.domain.dao.impl.memory.FlightInMemoryDao;
 import az.edu.turing.domain.entities.FlightEntity;
 import az.edu.turing.mapper.FlightMapper;
 import az.edu.turing.model.dto.FlightDto;
@@ -15,6 +15,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FlightControllerTest {
     private FlightController flightController;
@@ -60,10 +61,8 @@ class FlightControllerTest {
     @Test
     void getFlightById() {
         FlightDto flightById = flightController.getFlightById(101);
-
         LocalDateTime expected = LocalDateTime.now().plusHours(2);
         LocalDateTime actual = flightById.getDepartureTime();
-
         assertNotNull(flightById);
         assertEquals(101, flightById.getFlightId());
         assertEquals("Kiev", flightById.getFrom());
@@ -96,5 +95,14 @@ class FlightControllerTest {
         assertNotNull(flights);
         assertEquals(flights.get(0), flightById);
         assertEquals(flights, List.of(flightById));
+    }
+
+    @Test
+    void getAllFlightsWithin24Hours() {
+        List<FlightDto> flights = flightService.getAllFlightsWithin24Hours();
+        assertNotNull(flights);
+        assertEquals(2, flights.size());
+        assertTrue(flights.stream().anyMatch(flight -> flight.getFlightId() == 101));
+        assertTrue(flights.stream().anyMatch(flight -> flight.getFlightId() == 102));
     }
 }

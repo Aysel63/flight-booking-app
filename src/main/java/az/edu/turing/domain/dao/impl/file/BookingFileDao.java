@@ -1,4 +1,4 @@
-package az.edu.turing.domain.dao.impl;
+package az.edu.turing.domain.dao.impl.file;
 
 import az.edu.turing.domain.dao.BookingDao;
 import az.edu.turing.domain.entities.BookingEntity;

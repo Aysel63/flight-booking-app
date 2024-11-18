@@ -1,10 +1,9 @@
-package az.edu.turing.domain.dao.impl;
+package az.edu.turing.domain.dao.impl.memory;
 
 import az.edu.turing.domain.dao.FlightDao;
 import az.edu.turing.domain.entities.FlightEntity;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
