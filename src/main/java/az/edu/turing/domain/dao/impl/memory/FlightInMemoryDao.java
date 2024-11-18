@@ -1,18 +1,17 @@
-package az.edu.turing.domain.dao.impl;
+package az.edu.turing.domain.dao.impl.memory;
 
 import az.edu.turing.domain.dao.FlightDao;
 import az.edu.turing.domain.entities.FlightEntity;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-
 public class FlightInMemoryDao extends FlightDao {
+
     private static final Map<Long, FlightEntity> FLIGHTS = new HashMap<>();
 
     public FlightInMemoryDao() {
@@ -30,9 +29,9 @@ public class FlightInMemoryDao extends FlightDao {
     }
 
     @Override
-    public FlightEntity save(final FlightEntity object) {
-        FLIGHTS.put(object.getFlightId(), object);
-        return FLIGHTS.get(object.getFlightId());
+    public FlightEntity save(final FlightEntity flightEntity) {
+        FLIGHTS.put(flightEntity.getFlightId(), flightEntity);
+        return FLIGHTS.get(flightEntity.getFlightId());
     }
 
     @Override
