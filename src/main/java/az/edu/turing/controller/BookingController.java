@@ -3,10 +3,7 @@ package az.edu.turing.controller;
 import az.edu.turing.model.dto.BookingDto;
 import az.edu.turing.model.dto.request.CreateBookingRequest;
 import az.edu.turing.service.BookingService;
-
-
 import java.util.List;
-
 
 public class BookingController {
 
