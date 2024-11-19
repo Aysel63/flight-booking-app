@@ -1,4 +1,4 @@
-package az.edu.turing.domain.dao.impl;
+package az.edu.turing.domain.dao.impl.database;
 
 import az.edu.turing.domain.dao.BookingDao;
 import az.edu.turing.domain.entities.BookingEntity;
@@ -30,7 +30,6 @@ public class BookingDatabaseDao extends BookingDao {
                 "JOIN flights f ON b.flight_id = f.flight_id";
 
 
-
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
@@ -54,7 +53,6 @@ public class BookingDatabaseDao extends BookingDao {
                 "FROM bookings b " +
                 "JOIN flights f ON b.flight_id = f.flight_id " +
                 "WHERE b.booking_id = ?";
-
 
 
         try (Connection connection = getConnection();
@@ -166,9 +164,10 @@ public class BookingDatabaseDao extends BookingDao {
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement()) {
             result = statement.execute(query);
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return result;
-    }}
+    }
+}

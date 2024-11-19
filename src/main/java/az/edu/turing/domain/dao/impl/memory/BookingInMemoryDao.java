@@ -1,9 +1,8 @@
-package az.edu.turing.domain.dao.impl;
+package az.edu.turing.domain.dao.impl.memory;
 
 import az.edu.turing.domain.dao.BookingDao;
 import az.edu.turing.domain.entities.BookingEntity;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

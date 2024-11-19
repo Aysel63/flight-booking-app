@@ -1,7 +1,7 @@
 package az.edu.turing.controller;
 
-import az.edu.turing.domain.dao.impl.BookingInMemoryDao;
-import az.edu.turing.domain.dao.impl.FlightInMemoryDao;
+import az.edu.turing.domain.dao.impl.memory.BookingInMemoryDao;
+import az.edu.turing.domain.dao.impl.memory.FlightInMemoryDao;
 import az.edu.turing.domain.entities.FlightEntity;
 import az.edu.turing.mapper.BookingMapper;
 import az.edu.turing.model.dto.BookingDto;
