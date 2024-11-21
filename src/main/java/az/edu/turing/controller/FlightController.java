@@ -1,6 +1,5 @@
 package az.edu.turing.controller;
 
-import az.edu.turing.exception.FlightNotFoundException;
 import az.edu.turing.model.dto.FlightDto;
 import az.edu.turing.service.FlightService;
 

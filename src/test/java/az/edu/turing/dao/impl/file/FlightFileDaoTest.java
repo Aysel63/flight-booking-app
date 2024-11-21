@@ -1,4 +1,4 @@
-package az.edu.turing.DaoTests;
+package az.edu.turing.dao.impl.file;
 
 import az.edu.turing.domain.dao.impl.file.FlightFileDao;
 import az.edu.turing.domain.entities.FlightEntity;
@@ -17,7 +17,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 class FlightFileDaoTest {
 

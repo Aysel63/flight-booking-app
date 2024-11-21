@@ -20,7 +20,7 @@ public class CreateBookingRequest {
     }
 
     public void setBookerName(String bookerName) {
-        this.bookerName=bookerName;
+        this.bookerName = bookerName;
     }
 
     public String getBookerSurname() {

@@ -149,7 +149,6 @@ public class BookingDatabaseDao extends BookingDao {
     }
 
     private boolean createBBookingTableIfNotExists() {
-        boolean result = false;
         String query = """
                 CREATE TABLE IF NOT EXISTS bookings (
                     booking_id SERIAL PRIMARY KEY,
@@ -163,11 +162,12 @@ public class BookingDatabaseDao extends BookingDao {
 
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement()) {
-            result = statement.execute(query);
+            int result = statement.executeUpdate(query);
+            return result >= 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return result;
+        return false;
     }
 }
