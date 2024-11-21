@@ -1,5 +1,7 @@
 package az.edu.turing.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
@@ -63,6 +65,7 @@ public class BookingEntity implements Serializable {
         this.bookerSurname = bookerSurname;
     }
 
+    @JsonIgnore
     public String getFullName() {
         return bookerName + " " + bookerSurname;
     }
