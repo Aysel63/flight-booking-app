@@ -167,7 +167,6 @@ public class FlightDatabaseDao extends FlightDao {
 
 
     private boolean createFlightTableIfNotExists() {
-        boolean result = false;
         String query = """
                 CREATE TABLE IF NOT EXISTS flights (
                     flight_id SERIAL PRIMARY KEY,
@@ -180,13 +179,13 @@ public class FlightDatabaseDao extends FlightDao {
 
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement()) {
-            result = statement.execute(query);
+            int result = statement.executeUpdate(query);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        return result;
+        return false;
     }
+
 
     private void insertMockFlightDataIfDataNotExists() {
         String checkFlightQuery = "SELECT COUNT(*) FROM flights;";

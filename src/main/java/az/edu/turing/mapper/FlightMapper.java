@@ -3,7 +3,7 @@ package az.edu.turing.mapper;
 import az.edu.turing.domain.entities.FlightEntity;
 import az.edu.turing.model.dto.FlightDto;
 
-public class FlightMapper implements EntityMapper<FlightEntity, FlightDto>{
+public class FlightMapper implements EntityMapper<FlightEntity, FlightDto> {
 
     @Override
     public FlightEntity toEntity(FlightDto flightDto) {
