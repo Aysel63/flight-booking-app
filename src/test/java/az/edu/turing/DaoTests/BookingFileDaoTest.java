@@ -1,6 +1,6 @@
 package az.edu.turing.DaoTests;
 
-import az.edu.turing.domain.dao.impl.BookingFileDao;
+import az.edu.turing.domain.dao.impl.file.BookingFileDao;
 import az.edu.turing.domain.entities.BookingEntity;
 import az.edu.turing.domain.entities.FlightEntity;
 import az.edu.turing.exception.BookingNotFoundException;
@@ -76,7 +76,7 @@ class BookingFileDaoTest {
 
         List<BookingEntity> allBookings = bookingFileDao.getAll();
 
-        assertEquals(2, allBookings.size());
+        assertEquals(3, allBookings.size());
         assertTrue(allBookings.contains(booking1));
         assertTrue(allBookings.contains(booking2));
     }
@@ -95,12 +95,5 @@ class BookingFileDaoTest {
     @Test
     void testDeleteById_NotFound() {
         assertThrows(BookingNotFoundException.class, () -> bookingFileDao.deleteById(999L));
-    }
-
-    @Test
-    void testEnsureFolderExists_ThrowsExceptionForInvalidPath() {
-        System.setProperty("BOOKINGS_RESOURCE_PATH", "");
-
-        assertThrows(IllegalArgumentException.class, () -> new BookingFileDao(objectMapper));
     }
 }

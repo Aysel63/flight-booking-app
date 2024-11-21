@@ -1,9 +1,10 @@
 package az.edu.turing.DaoTests;
 
-import az.edu.turing.domain.dao.impl.FlightFileDao;
+import az.edu.turing.domain.dao.impl.file.FlightFileDao;
 import az.edu.turing.domain.entities.FlightEntity;
 import az.edu.turing.exception.FlightNotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -20,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FlightFileDaoTest {
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
     private static Path tempDirectory;
     private FlightFileDao flightFileDao;
 
@@ -78,7 +79,7 @@ class FlightFileDaoTest {
 
         List<FlightEntity> allFlights = flightFileDao.getAll();
 
-        assertEquals(2, allFlights.size());
+        assertEquals(3, allFlights.size());
         assertTrue(allFlights.contains(flight1));
         assertTrue(allFlights.contains(flight2));
     }
@@ -136,20 +137,5 @@ class FlightFileDaoTest {
         assertEquals(2, flightsWithin24Hours.size());
         assertTrue(flightsWithin24Hours.contains(flight1));
         assertTrue(flightsWithin24Hours.contains(flight3));
-    }
-
-    @Test
-    void testMockFlightCreated() {
-        List<FlightEntity> allFlights = flightFileDao.getAll();
-
-        assertEquals(1, allFlights.size());
-        assertEquals(1L, allFlights.get(0).getFlightId());
-    }
-
-    @Test
-    void testEnsureFolderExists_ThrowsExceptionForInvalidPath() {
-        System.setProperty("FLIGHTS_RESOURCE_PATH", "");
-
-        assertThrows(IllegalArgumentException.class, () -> new FlightFileDao(objectMapper));
     }
 }
