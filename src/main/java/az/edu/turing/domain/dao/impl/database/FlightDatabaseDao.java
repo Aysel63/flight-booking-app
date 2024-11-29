@@ -195,7 +195,7 @@ public class FlightDatabaseDao extends FlightDao {
             if (!(resultSet.next() && resultSet.getInt(1) > 0)) {
                 String query = """
                         INSERT INTO flights (destination, from_location, departure_time, available_seats)
-                        VALUES ('New York', 'Kiev', NOW(), 150);
+                        VALUES ('New York', 'Kiev', NOW() + INTERVAL '1 hour', 150);
                         """;
                 try (Statement statement = connection.createStatement()) {
                     statement.execute(query);
