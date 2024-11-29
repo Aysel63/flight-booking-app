@@ -4,8 +4,12 @@ import az.edu.turing.controller.BookingController;
 import az.edu.turing.controller.FlightController;
 import az.edu.turing.domain.dao.BookingDao;
 import az.edu.turing.domain.dao.FlightDao;
+import az.edu.turing.domain.dao.impl.database.BookingDatabaseDao;
+import az.edu.turing.domain.dao.impl.database.FlightDatabaseDao;
 import az.edu.turing.domain.dao.impl.file.BookingFileDao;
 import az.edu.turing.domain.dao.impl.file.FlightFileDao;
+import az.edu.turing.domain.dao.impl.memory.BookingInMemoryDao;
+import az.edu.turing.domain.dao.impl.memory.FlightInMemoryDao;
 import az.edu.turing.exception.NotFoundException;
 import az.edu.turing.mapper.BookingMapper;
 import az.edu.turing.mapper.FlightMapper;
@@ -27,17 +31,17 @@ import java.util.Scanner;
 public class ConsoleUtil {
 
     private final FlightDao flightDao =
-//            new FlightInMemoryDao();
-            new FlightFileDao(new ObjectMapper().registerModule(new JavaTimeModule()));
-    //            new FlightDatabaseDao();
+          // new FlightInMemoryDao();
+          // new FlightFileDao(new ObjectMapper().registerModule(new JavaTimeModule()));
+               new FlightDatabaseDao();
     private final FlightMapper flightMapper = new FlightMapper();
     private final FlightService flightService = new FlightServiceImpl(flightDao, flightMapper);
     private final FlightController flightController = new FlightController(flightService);
 
     private final BookingDao bookingDao =
-//            new BookingInMemoryDao();
-            new BookingFileDao(new ObjectMapper().registerModule(new JavaTimeModule()));
-    //            new BookingDatabaseDao();
+          // new BookingInMemoryDao();
+           //new BookingFileDao(new ObjectMapper().registerModule(new JavaTimeModule()));
+               new BookingDatabaseDao();
     private final BookingMapper bookingMapper = new BookingMapper();
     private final BookingService bookingService = new BookingServiceImpl(bookingDao, flightDao, bookingMapper);
     private final BookingController bookingController = new BookingController(bookingService);
@@ -59,7 +63,10 @@ public class ConsoleUtil {
                     case 3 -> searchAndBookFlight();
                     case 4 -> cancelBooking();
                     case 5 -> showMyFlights();
-                    case 6 -> exitProgram();
+                    case 6 -> {
+                        exitProgram();
+                        canLoop=false;
+                    }
                     default -> System.out.println("Wrong choice. Try Again");
                 }
 
